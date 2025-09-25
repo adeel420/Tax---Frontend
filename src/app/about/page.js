@@ -163,15 +163,16 @@ export default function Page() {
                 more of their hard-earned money.
               </p>
               <p>
-                Over the past 25 years, we've grown from a one-person operation
-                to a team of certified professionals, but our commitment to
-                personalized service and maximum refunds has never wavered.
+                Over the past 25 years, we&apos;ve grown from a one-person
+                operation to a team of certified professionals, but our
+                commitment to personalized service and maximum refunds has never
+                wavered.
               </p>
               <p>
-                Today, we're proud to serve over 15,000 clients annually, having
-                secured more than $50 million in refunds and savings through our
-                expertise in tax law and dedication to finding every possible
-                deduction.
+                Today, we&apos;re proud to serve over 15,000 clients annually,
+                having secured more than $50 million in refunds and savings
+                through our expertise in tax law and dedication to finding every
+                possible deduction.
               </p>
             </div>
           </div>
