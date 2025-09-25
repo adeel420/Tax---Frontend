@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import About_Section from "../components/home_subsections/About_Section";
 
 export default function Page() {
   const [isVisible, setIsVisible] = useState(false);
@@ -146,6 +147,10 @@ export default function Page() {
             ))}
           </div>
         </div>
+      </section>
+
+      <section className=" bg-white">
+        <About_Section />
       </section>
 
       {/* Our Story */}
