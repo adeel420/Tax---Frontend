@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export default function page() {
+export default function Page() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
