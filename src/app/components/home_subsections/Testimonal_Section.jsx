@@ -8,7 +8,7 @@ export default function Testimonial_Section() {
       name: "Sarah Johnson",
       role: "Small Business Owner",
       content:
-        "TaxPro saved me thousands on my business taxes. Their expertise is unmatched!",
+        "Eliaselitaxservices saved me thousands on my business taxes. Their expertise is unmatched!",
       rating: 5,
       avatar: "SJ",
     },

@@ -61,7 +61,7 @@ export default function Page() {
         </svg>
       ),
       title: "Email",
-      details: "info@taxpro.com",
+      details: "info@Eliaselitaxservices.com",
       subtitle: "24/7 Response",
     },
     {

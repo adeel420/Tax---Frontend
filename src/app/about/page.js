@@ -119,7 +119,7 @@ export default function Page() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center transition-all duration-1000">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6">
-              About TaxPro
+              About Eliaselitaxservices
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
               Your trusted partner in tax preparation and financial planning for
@@ -162,10 +162,10 @@ export default function Page() {
             </h2>
             <div className="space-y-4 sm:space-y-6 text-base sm:text-lg text-slate-600 leading-relaxed">
               <p>
-                Founded in 1999 by John Smith, TaxPro began as a small tax
-                preparation service with a simple mission: to provide honest,
-                expert tax advice that helps individuals and businesses keep
-                more of their hard-earned money.
+                Founded in 1999 by John Smith, Eliaselitaxservices began as a
+                small tax preparation service with a simple mission: to provide
+                honest, expert tax advice that helps individuals and businesses
+                keep more of their hard-earned money.
               </p>
               <p>
                 Over the past 25 years, we&apos;ve grown from a one-person
@@ -265,7 +265,8 @@ export default function Page() {
               Ready to Work with Us?
             </h2>
             <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 opacity-90 max-w-2xl sm:max-w-3xl mx-auto">
-              Experience the TaxPro difference with a free consultation
+              Experience the Eliaselitaxservices difference with a free
+              consultation
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 font-semibold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">

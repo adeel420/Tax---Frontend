@@ -127,9 +127,9 @@ export default function About_Section() {
 
               <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed">
                 With over 25 years of experience in tax preparation and
-                financial planning, John founded TaxPro to provide personalized,
-                expert tax services that maximize refunds and minimize stress
-                for individuals and businesses.
+                financial planning, John founded Eliaselitaxservices to provide
+                personalized, expert tax services that maximize refunds and
+                minimize stress for individuals and businesses.
               </p>
 
               <div className="grid grid-cols-2 gap-4 sm:gap-6">

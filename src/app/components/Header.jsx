@@ -26,7 +26,9 @@ export default function Header() {
                 />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-white">TaxPro</span>
+            <span className="text-2xl font-bold text-white">
+              Eliaselitaxservices
+            </span>
           </div>
 
           {/* Desktop Navigation */}
