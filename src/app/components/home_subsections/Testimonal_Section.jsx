@@ -117,6 +117,7 @@ export default function Testimonial_Section() {
           </div>
 
           {/* Navigation Arrows */}
+          {/* Navigation Arrows */}
           <button
             onClick={prevSlide}
             className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"
@@ -135,6 +136,7 @@ export default function Testimonial_Section() {
               />
             </svg>
           </button>
+
           <button
             onClick={nextSlide}
             className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"

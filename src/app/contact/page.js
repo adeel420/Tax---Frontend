@@ -121,23 +121,30 @@ export default function Page() {
 
       {/* Contact Info Cards */}
       <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 max-w-6xl mx-auto">
             {contactInfo.map((info, index) => (
               <div
                 key={index}
-                className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center group hover:shadow-xl transition-all duration-500"
+                className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl lg:rounded-3xl p-6 sm:p-8 lg:p-10 text-center group hover:shadow-2xl transition-all duration-500"
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-xl sm:rounded-2xl flex items-center justify-center text-white mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                {/* Icon */}
+                <div className="w-14 h-14 sm:w-16 sm:h-16 xl:w-20 xl:h-20 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-xl xl:rounded-2xl flex items-center justify-center text-white mx-auto mb-4 sm:mb-6 xl:mb-8 group-hover:scale-110 transition-transform duration-300">
                   {info.icon}
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
+
+                {/* Title */}
+                <h3 className="text-lg sm:text-xl xl:text-2xl font-bold text-slate-900 mb-2">
                   {info.title}
                 </h3>
-                <div className="text-base sm:text-lg md:text-xl text-blue-600 font-semibold mb-1">
+
+                {/* Details */}
+                <div className="text-base sm:text-lg xl:text-xl text-blue-600 font-semibold mb-1">
                   {info.details}
                 </div>
-                <div className="text-slate-600 text-sm sm:text-base">
+
+                {/* Subtitle */}
+                <div className="text-slate-600 text-sm sm:text-base xl:text-lg">
                   {info.subtitle}
                 </div>
               </div>

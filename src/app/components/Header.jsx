@@ -6,8 +6,8 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/50">
-      <div className="container mx-auto px-6 py-4">
+    <header className="fixed top-0 left-0 w-full z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/50 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
@@ -26,40 +26,28 @@ export default function Header() {
                 />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-white">
+            <span className="text-xl sm:text-2xl font-bold text-white tracking-wide">
               Eliaselitaxservices
             </span>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a
-              href="/"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
+            <a href="/" className="nav-link">
               Home
             </a>
-            <a
-              href="/services"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
+            <a href="/services" className="nav-link">
               Services
             </a>
-            <a
-              href="/about"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
+            <a href="/about" className="nav-link">
               About
             </a>
-            <a
-              href="/contact"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
+            <a href="/contact" className="nav-link">
               Contact
             </a>
           </nav>
 
-          {/* CTA Button */}
+          {/* CTA Button (Desktop Only) */}
           <div className="hidden md:flex items-center space-x-4">
             <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
               Get Quote
@@ -68,11 +56,12 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
+            aria-label="Toggle Menu"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white"
+            className="md:hidden text-white focus:outline-none"
           >
             <svg
-              className="w-6 h-6"
+              className="w-7 h-7"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -92,40 +81,37 @@ export default function Header() {
         </div>
 
         {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-slate-800">
-            <nav className="flex flex-col space-y-4 pt-4">
-              <a
-                href="/"
-                className="text-slate-300 hover:text-white transition-colors duration-300"
-              >
-                Home
-              </a>
-              <a
-                href="/services"
-                className="text-slate-300 hover:text-white transition-colors duration-300"
-              >
-                Services
-              </a>
-              <a
-                href="/about"
-                className="text-slate-300 hover:text-white transition-colors duration-300"
-              >
-                About
-              </a>
-              <a
-                href="/contact"
-                className="text-slate-300 hover:text-white transition-colors duration-300"
-              >
-                Contact
-              </a>
-              <button className="mt-4 px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg w-full">
-                Get Quote
-              </button>
-            </nav>
-          </div>
-        )}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
+          }`}
+        >
+          <nav className="flex flex-col space-y-4 pt-4 border-t border-slate-800">
+            <a href="/" className="nav-link">
+              Home
+            </a>
+            <a href="/services" className="nav-link">
+              Services
+            </a>
+            <a href="/about" className="nav-link">
+              About
+            </a>
+            <a href="/contact" className="nav-link">
+              Contact
+            </a>
+            <button className="mt-4 px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg w-full transition-all duration-300 hover:from-blue-700 hover:to-blue-800">
+              Get Quote
+            </button>
+          </nav>
+        </div>
       </div>
+
+      {/* Extra Tailwind Styling */}
+      <style jsx>{`
+        .nav-link {
+          @apply text-slate-300 hover:text-white transition-colors duration-300;
+        }
+      `}</style>
     </header>
   );
 }
