@@ -119,15 +119,15 @@ export default function About_Section() {
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                <span className="block">John Smith</span>
+                <span className="block">Hermano M.</span>
                 <span className="block text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
                   CPA, Tax Expert
                 </span>
               </h2>
 
               <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed">
-                With over 25 years of experience in tax preparation and
-                financial planning, John founded Eliaselitaxservices to provide
+                With over 5 years of experience in tax preparation and financial
+                planning, John founded Eliaselitaxservices to provide
                 personalized, expert tax services that maximize refunds and
                 minimize stress for individuals and businesses.
               </p>
