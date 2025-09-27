@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
-import Contact from "../components/adminDashboard_subsections/Contact_subsection";
 import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
 
 export default function Page() {
@@ -95,7 +94,7 @@ export default function Page() {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">ETS</span>
             </div>
-            <span className="text-xl font-bold text-white">
+            <span className="text-lg md:text-xl font-bold text-white">
               Eliaselitaxservices
             </span>
           </div>
@@ -107,9 +106,8 @@ export default function Page() {
               key={item.id}
               onClick={() => {
                 setActiveTab(item.id);
-                if (item.id === "logout") {
-                  handleLogout();
-                }
+                if (item.id === "logout") handleLogout();
+                if (window.innerWidth < 1024) setSidebarOpen(false); // auto-close on mobile
               }}
               className={`w-full flex items-center px-4 cursor-pointer py-3 mb-2 rounded-xl transition-all duration-300 ${
                 activeTab === item.id
@@ -127,8 +125,8 @@ export default function Page() {
       {/* Main Content */}
       <div className="flex-1 lg:ml-0">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b border-slate-200">
-          <div className="flex items-center justify-between px-6 py-4">
+        <header className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
+          <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -148,17 +146,18 @@ export default function Page() {
                   />
                 </svg>
               </button>
-              <h1 className="ml-4 lg:ml-0 text-2xl font-bold text-slate-900 capitalize">
+              <h1 className="ml-4 lg:ml-0 text-lg md:text-2xl font-bold text-slate-900 capitalize">
                 {activeTab}
               </h1>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="relative">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              {/* Search */}
+              <div className="relative hidden sm:block">
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-32 md:w-48 lg:w-64 pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <svg
                   className="absolute left-3 top-2.5 w-5 h-5 text-slate-400"
@@ -175,7 +174,8 @@ export default function Page() {
                 </svg>
               </div>
 
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+              {/* User Avatar */}
+              <div className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
                 {user?.name
                   ? user.name
                       .split(" ")
@@ -189,20 +189,20 @@ export default function Page() {
         </header>
 
         {/* Dashboard Content */}
-        <main className="p-6">
+        <main className="p-4 md:p-6">
           {activeTab === "overview" && (
             <div className="space-y-6">
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {stats.map((stat, index) => (
                   <div
                     key={index}
-                    className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-3xl">{stat.icon}</div>
+                    <div className="flex items-center justify-between mb-3 md:mb-4">
+                      <div className="text-2xl md:text-3xl">{stat.icon}</div>
                       <span
-                        className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                        className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold ${
                           stat.change.startsWith("+")
                             ? "bg-emerald-100 text-emerald-600"
                             : "bg-red-100 text-red-600"
@@ -211,10 +211,10 @@ export default function Page() {
                         {stat.change}
                       </span>
                     </div>
-                    <h3 className="text-slate-600 text-sm font-medium mb-1">
+                    <h3 className="text-slate-600 text-xs md:text-sm font-medium mb-1">
                       {stat.title}
                     </h3>
-                    <p className="text-3xl font-bold text-slate-900">
+                    <p className="text-xl md:text-3xl font-bold text-slate-900">
                       {stat.value}
                     </p>
                   </div>
@@ -222,16 +222,16 @@ export default function Page() {
               </div>
 
               {/* Charts & Tables */}
-              <div className="grid lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                 {/* Revenue Chart */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold text-slate-900 mb-6">
+                <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+                  <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
                     Revenue Overview
                   </h3>
-                  <div className="h-64 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl flex items-center justify-center">
+                  <div className="h-48 md:h-64 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl flex items-center justify-center">
                     <div className="text-center text-slate-600">
                       <svg
-                        className="w-16 h-16 mx-auto mb-4"
+                        className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -243,32 +243,34 @@ export default function Page() {
                           d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                         />
                       </svg>
-                      <p className="font-semibold">Revenue Chart</p>
+                      <p className="font-semibold text-sm md:text-base">
+                        Revenue Chart
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Recent Clients */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold text-slate-900 mb-6">
+                <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+                  <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
                     Recent Clients
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     {recentClients.map((client, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-4 bg-slate-50 rounded-xl"
+                        className="flex items-center justify-between p-3 md:p-4 bg-slate-50 rounded-xl"
                       >
                         <div>
-                          <p className="font-semibold text-slate-900">
+                          <p className="font-semibold text-slate-900 text-sm md:text-base">
                             {client.name}
                           </p>
-                          <p className="text-sm text-slate-600">
+                          <p className="text-xs md:text-sm text-slate-600">
                             {client.service}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-slate-900">
+                          <p className="font-bold text-slate-900 text-sm md:text-base">
                             {client.amount}
                           </p>
                           <span
@@ -291,53 +293,66 @@ export default function Page() {
             </div>
           )}
 
+          {/* Other Tabs */}
           {activeTab === "clients" && (
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-slate-900">
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 sm:gap-0">
+                <h3 className="text-lg md:text-xl font-bold text-slate-900">
                   Client Management
                 </h3>
-                <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all duration-300">
+                <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 text-sm md:text-base">
                   Add Client
                 </button>
               </div>
-              <div className="h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600">Client management interface</p>
+              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
+                <p className="text-slate-600 text-sm md:text-base">
+                  Client management interface
+                </p>
               </div>
             </div>
           )}
 
           {activeTab === "returns" && (
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-slate-900 mb-6">
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
                 Tax Returns
               </h3>
-              <div className="h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600">
+              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
+                <p className="text-slate-600 text-sm md:text-base">
                   Tax returns management interface
                 </p>
               </div>
             </div>
           )}
 
-          {activeTab === "contact" && <Contact_subsection />}
+          {activeTab === "contact" && (
+            <div className="overflow-x-auto">
+              <Contact_subsection />
+            </div>
+          )}
 
           {activeTab === "reports" && (
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-slate-900 mb-6">Reports</h3>
-              <div className="h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600">Reports interface</p>
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
+                Reports
+              </h3>
+              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
+                <p className="text-slate-600 text-sm md:text-base">
+                  Reports interface
+                </p>
               </div>
             </div>
           )}
 
           {activeTab === "settings" && (
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-slate-900 mb-6">
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
                 Settings
               </h3>
-              <div className="h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600">Settings interface</p>
+              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
+                <p className="text-slate-600 text-sm md:text-base">
+                  Settings interface
+                </p>
               </div>
             </div>
           )}
