@@ -1,10 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
+import Contact from "../components/adminDashboard_subsections/Contact_subsection";
+import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState({});
+  const router = useRouter();
 
   const stats = [
     { title: "Total Clients", value: "15,247", change: "+12%", icon: "👥" },
@@ -44,11 +51,36 @@ export default function Page() {
     { id: "overview", label: "Overview", icon: "📊" },
     { id: "clients", label: "Clients", icon: "👥" },
     { id: "returns", label: "Tax Returns", icon: "📄" },
-    { id: "calendar", label: "Calendar", icon: "📅" },
+    { id: "contact", label: "Contact", icon: "📧" },
     { id: "reports", label: "Reports", icon: "📈" },
     { id: "settings", label: "Settings", icon: "⚙️" },
     { id: "logout", label: "Logout", icon: "⏻" },
   ];
+
+  const handleLogout = () => {
+    toast.success("Admin Dashboard Logout");
+    router.push("/");
+  };
+
+  const handleGetLogin = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER}/user/login-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setUser(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    handleGetLogin();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -61,9 +93,11 @@ export default function Page() {
         <div className="flex items-center justify-center h-16 px-4 border-b border-slate-700">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">TP</span>
+              <span className="text-white font-bold text-sm">ETS</span>
             </div>
-            <span className="text-xl font-bold text-white">TaxPro Admin</span>
+            <span className="text-xl font-bold text-white">
+              Eliaselitaxservices
+            </span>
           </div>
         </div>
 
@@ -71,8 +105,13 @@ export default function Page() {
           {menuItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center px-4 py-3 mb-2 rounded-xl transition-all duration-300 ${
+              onClick={() => {
+                setActiveTab(item.id);
+                if (item.id === "logout") {
+                  handleLogout();
+                }
+              }}
+              className={`w-full flex items-center px-4 cursor-pointer py-3 mb-2 rounded-xl transition-all duration-300 ${
                 activeTab === item.id
                   ? "bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg"
                   : "text-slate-300 hover:bg-slate-800 hover:text-white"
@@ -137,7 +176,13 @@ export default function Page() {
               </div>
 
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
-                JS
+                {user?.name
+                  ? user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                  : ""}
               </div>
             </div>
           </div>
@@ -275,16 +320,7 @@ export default function Page() {
             </div>
           )}
 
-          {activeTab === "calendar" && (
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-slate-900 mb-6">
-                Calendar
-              </h3>
-              <div className="h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600">Calendar interface</p>
-              </div>
-            </div>
-          )}
+          {activeTab === "contact" && <Contact_subsection />}
 
           {activeTab === "reports" && (
             <div className="bg-white rounded-2xl p-6 shadow-lg">

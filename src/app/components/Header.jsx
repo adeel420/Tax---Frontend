@@ -6,10 +6,12 @@ import { Popover } from "antd";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [token, setToken] = useState("");
+  const [user, setUser] = useState({});
   const router = useRouter();
 
   useEffect(() => {
@@ -21,6 +23,26 @@ export default function Header() {
     toast.success("Logout successful");
     router.push("/login");
   };
+
+  const handleGetLogin = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER}/user/login-data`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setUser(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    handleGetLogin();
+  }, []);
 
   const content = (
     <div className="w-[150px] ">
@@ -86,7 +108,13 @@ export default function Header() {
             {token ? (
               <Popover content={content} trigger="click">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer">
-                  A
+                  {user?.name
+                    ? user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                    : ""}
                 </div>
               </Popover>
             ) : (
@@ -150,7 +178,13 @@ export default function Header() {
               <div className="mt-4 flex justify-start">
                 <Popover content={content} trigger="click">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer">
-                    A
+                    {user?.name
+                      ? user.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()
+                      : ""}
                   </div>
                 </Popover>
               </div>

@@ -1,8 +1,12 @@
 "use client";
 
+import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import Loader from "../components/loader/Loader";
 
 export default function Page() {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,9 +15,38 @@ export default function Page() {
     message: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    if (!formData.name || !formData.email || !formData.message) {
+      return toast.error("Name, Email, and Message are required");
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/contact/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast.success("Form submitted successfully");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        service: "",
+        message: "",
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -100,6 +133,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen pt-[70px] md:pt-[10px] bg-white">
+      {loading && <Loader />}
       {/* Hero Section */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden">
         <div className="absolute inset-0">
@@ -174,7 +208,7 @@ export default function Page() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                      className="w-full px-4 py-3 border text-black border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                       placeholder="Your full name"
                       required
                     />
@@ -188,7 +222,7 @@ export default function Page() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                      className="w-full px-4 py-3 border text-black border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                       placeholder="your@email.com"
                       required
                     />
@@ -205,7 +239,7 @@ export default function Page() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                      className="w-full px-4 py-3 border text-black border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                       placeholder="(555) 123-4567"
                     />
                   </div>
@@ -217,7 +251,7 @@ export default function Page() {
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                      className="w-full px-4 py-3 border text-black border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                     >
                       <option value="">Select a service</option>
                       <option value="individual">Individual Tax Prep</option>
@@ -237,7 +271,7 @@ export default function Page() {
                     value={formData.message}
                     onChange={handleChange}
                     rows="5"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                    className="w-full px-4 py-3 border text-black border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                     placeholder="Tell us about your tax needs..."
                     required
                   ></textarea>
