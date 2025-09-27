@@ -57,9 +57,6 @@ export default function Page() {
       // ✅ Success case
       toast.success(response?.data?.message || "Password reset successful");
       setIsSubmitted(true);
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
     } catch (error) {
       // ✅ Backend validation errors
       if (error.response && error.response.data) {
