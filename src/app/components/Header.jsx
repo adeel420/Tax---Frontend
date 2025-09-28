@@ -163,7 +163,7 @@ export default function Header() {
             isMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
           }`}
         >
-          <nav className="flex flex-col space-y-4 pt-4 border-t border-slate-800">
+          <nav className="flex flex-col space-y-4 pt-4 border-t text-white border-slate-800">
             <Link href="/" className="nav-link">
               Home
             </Link>

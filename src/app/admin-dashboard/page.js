@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
 import DocumentViewSection from "../components/adminDashboard_subsections/DocumentViewSection";
+import NewsletterManagement from "../components/adminDashboard_subsections/NewsletterManagement";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -52,7 +53,7 @@ export default function Page() {
     { id: "clients", label: "Clients", icon: "👥" },
     { id: "document", label: "Documents", icon: "📄" },
     { id: "contact", label: "Contact", icon: "📧" },
-    { id: "reports", label: "Reports", icon: "📈" },
+    { id: "newsLetter", label: "News Letter", icon: "📩" },
     { id: "settings", label: "Settings", icon: "⚙️" },
     { id: "logout", label: "Logout", icon: "⏻" },
   ];
@@ -321,18 +322,7 @@ export default function Page() {
             </div>
           )}
 
-          {activeTab === "reports" && (
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
-                Reports
-              </h3>
-              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600 text-sm md:text-base">
-                  Reports interface
-                </p>
-              </div>
-            </div>
-          )}
+          {activeTab === "newsLetter" && <NewsletterManagement />}
 
           {activeTab === "settings" && (
             <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">

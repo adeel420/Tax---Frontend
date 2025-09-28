@@ -1,21 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setEmail("");
-    setTimeout(() => setIsSubmitted(false), 3000);
+    setError("");
+
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/newsletter/subscribe`,
+        { email }
+      );
+
+      if (res.data.success) {
+        setIsSubmitted(true);
+        setEmail("");
+        setTimeout(() => setIsSubmitted(false), 4000);
+      }
+    } catch (err) {
+      console.error("❌ Newsletter subscribe error:", err);
+      setError(
+        err.response?.data?.message || "Something went wrong. Please try again."
+      );
+    }
   };
 
   return (
     <section className="py-16 sm:py-20 lg:py-28 bg-gradient-to-r from-blue-600 to-emerald-600 relative overflow-hidden">
-      {/* Decorative background circles */}
+      {/* background effects */}
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-40 sm:w-64 h-40 sm:h-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-56 sm:w-80 h-56 sm:h-80 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -78,6 +96,13 @@ export default function Newsletter() {
             </div>
           )}
 
+          {/* Error message */}
+          {error && (
+            <div className="mt-6 p-4 bg-red-500/20 backdrop-blur-sm rounded-xl border border-red-400">
+              <p className="text-white text-sm sm:text-base">{error}</p>
+            </div>
+          )}
+
           {/* Features */}
           <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-6 sm:gap-8 text-white/80">
             {[
@@ -86,57 +111,12 @@ export default function Newsletter() {
               { text: "Money-Saving Tips", icon: "money" },
             ].map((item, i) => (
               <div key={i} className="flex items-center text-sm sm:text-base">
-                {item.icon === "clock" && (
-                  <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                )}
-                {item.icon === "arrow" && (
-                  <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 17h5l-5 5v-5z"
-                    />
-                  </svg>
-                )}
-                {item.icon === "money" && (
-                  <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                    />
-                  </svg>
-                )}
+                {/* icons logic here */}
                 {item.text}
               </div>
             ))}
           </div>
 
-          {/* Disclaimer */}
           <p className="mt-6 text-xs sm:text-sm text-white/70">
             No spam, unsubscribe anytime. We respect your privacy.
           </p>
