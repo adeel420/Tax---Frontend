@@ -13,6 +13,7 @@ export default function LayoutWrapper({ children }) {
     "/forget-password",
     "/verify-email",
     "/reset-password",
+    "/user-dashboard",
   ];
   const hideHeaderFooter = hideHeaderPaths.includes(pathname);
 

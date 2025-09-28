@@ -47,7 +47,9 @@ export default function Header() {
   const content = (
     <div className="w-[150px] ">
       <button
-        onClick={() => router.push("/admin-dashboard")}
+        onClick={() =>
+          router.push(user.role === 0 ? "/user-dashboard" : "/admin-dashboard")
+        }
         className="hover:bg-[#ccc] text-[black] w-full text-left p-2 flex gap-2 items-center text-[18px] font-semibold rounded cursor-pointer"
       >
         <MdDashboard /> Dashboard

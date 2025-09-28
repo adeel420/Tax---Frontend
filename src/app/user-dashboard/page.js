@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
-import DocumentViewSection from "../components/adminDashboard_subsections/DocumentViewSection";
+import DocumentsSection from "../components/userDashboard_subsections/DocumentsSection";
 
 export default function Page() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("document");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState({});
   const router = useRouter();
@@ -48,9 +48,9 @@ export default function Page() {
   ];
 
   const menuItems = [
-    { id: "overview", label: "Overview", icon: "📊" },
-    { id: "clients", label: "Clients", icon: "👥" },
     { id: "document", label: "Documents", icon: "📄" },
+    { id: "clients", label: "Clients", icon: "👥" },
+    { id: "returns", label: "Tax Returns", icon: "📄" },
     { id: "contact", label: "Contact", icon: "📧" },
     { id: "reports", label: "Reports", icon: "📈" },
     { id: "settings", label: "Settings", icon: "⚙️" },
@@ -58,7 +58,7 @@ export default function Page() {
   ];
 
   const handleLogout = () => {
-    toast.success("Admin Dashboard Logout");
+    toast.success("User Dashboard Logout");
     router.push("/");
   };
 
@@ -191,108 +191,7 @@ export default function Page() {
 
         {/* Dashboard Content */}
         <main className="p-4 md:p-6">
-          {activeTab === "overview" && (
-            <div className="space-y-6">
-              {/* Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <div className="flex items-center justify-between mb-3 md:mb-4">
-                      <div className="text-2xl md:text-3xl">{stat.icon}</div>
-                      <span
-                        className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold ${
-                          stat.change.startsWith("+")
-                            ? "bg-emerald-100 text-emerald-600"
-                            : "bg-red-100 text-red-600"
-                        }`}
-                      >
-                        {stat.change}
-                      </span>
-                    </div>
-                    <h3 className="text-slate-600 text-xs md:text-sm font-medium mb-1">
-                      {stat.title}
-                    </h3>
-                    <p className="text-xl md:text-3xl font-bold text-slate-900">
-                      {stat.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Charts & Tables */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                {/* Revenue Chart */}
-                <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-                  <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
-                    Revenue Overview
-                  </h3>
-                  <div className="h-48 md:h-64 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl flex items-center justify-center">
-                    <div className="text-center text-slate-600">
-                      <svg
-                        className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                        />
-                      </svg>
-                      <p className="font-semibold text-sm md:text-base">
-                        Revenue Chart
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recent Clients */}
-                <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-                  <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
-                    Recent Clients
-                  </h3>
-                  <div className="space-y-3 md:space-y-4">
-                    {recentClients.map((client, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-3 md:p-4 bg-slate-50 rounded-xl"
-                      >
-                        <div>
-                          <p className="font-semibold text-slate-900 text-sm md:text-base">
-                            {client.name}
-                          </p>
-                          <p className="text-xs md:text-sm text-slate-600">
-                            {client.service}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-slate-900 text-sm md:text-base">
-                            {client.amount}
-                          </p>
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              client.status === "Completed"
-                                ? "bg-emerald-100 text-emerald-600"
-                                : client.status === "In Progress"
-                                ? "bg-blue-100 text-blue-600"
-                                : "bg-yellow-100 text-yellow-600"
-                            }`}
-                          >
-                            {client.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {activeTab === "document" && <DocumentsSection />}
 
           {/* Other Tabs */}
           {activeTab === "clients" && (
@@ -313,7 +212,18 @@ export default function Page() {
             </div>
           )}
 
-          {activeTab === "document" && <DocumentViewSection />}
+          {activeTab === "returns" && (
+            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
+              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
+                Tax Returns
+              </h3>
+              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
+                <p className="text-slate-600 text-sm md:text-base">
+                  Tax returns management interface
+                </p>
+              </div>
+            </div>
+          )}
 
           {activeTab === "contact" && (
             <div className="overflow-x-auto">
