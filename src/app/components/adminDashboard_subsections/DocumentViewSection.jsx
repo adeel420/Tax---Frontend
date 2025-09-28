@@ -102,10 +102,15 @@ export default function DocumentViewSection() {
   };
 
   const handleDownload = (fileUrl, fileName) => {
+    // If Cloudinary URL, force download using fl_attachment
+    let downloadUrl = fileUrl;
+    if (downloadUrl.includes("res.cloudinary.com")) {
+      downloadUrl = downloadUrl.replace("/upload/", "/upload/fl_attachment/");
+    }
+
     const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = fileName;
-    link.target = "_blank";
+    link.href = downloadUrl;
+    link.setAttribute("download", fileName || "document");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -349,7 +354,7 @@ export default function DocumentViewSection() {
                                   userDoc[docType.key].fileName
                                 )
                               }
-                              className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                              className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 cursor-pointer"
                             >
                               View
                             </button>
@@ -360,7 +365,7 @@ export default function DocumentViewSection() {
                                   userDoc[docType.key].fileName
                                 )
                               }
-                              className="flex-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200"
+                              className="flex-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 cursor-pointer"
                             >
                               ↓
                             </button>
