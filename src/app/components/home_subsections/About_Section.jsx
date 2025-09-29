@@ -96,7 +96,7 @@ export default function About_Section() {
                   </div>
                   <div className="absolute right-0 top-1/2 w-6 h-6 sm:w-8 sm:h-8 translate-x-1/2 -translate-y-1/2 bg-purple-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-[10px] sm:text-xs font-bold">
-                      25
+                      5
                     </span>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export default function About_Section() {
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-slate-700/50">
                   <div className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1">
-                    25+
+                    5+
                   </div>
                   <div className="text-slate-400 text-xs sm:text-sm">
                     Years Experience
