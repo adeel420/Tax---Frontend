@@ -90,7 +90,7 @@ export default function Newsletter() {
                   />
                 </svg>
                 <span className="font-semibold">
-                  Thank you! You're subscribed to our newsletter.
+                  Thank you! You&apos;re subscribed to our newsletter.
                 </span>
               </div>
             </div>

@@ -35,7 +35,7 @@ export default function MyAppointments() {
               <div className="bg-blue-900/50 p-6 rounded-xl">
                 <h4 className="text-lg font-semibold text-blue-300 mb-3">📋 What to Bring</h4>
                 <ul className="text-slate-300 space-y-2 text-sm">
-                  <li>• Valid ID (Driver&apos;s License/Passport)</li>
+                  <li>• Valid ID (Driver License/Passport)</li>
                   <li>• Social Security Card</li>
                   <li>• W-2 forms from all employers</li>
                   <li>• 1099 forms (if applicable)</li>
@@ -69,7 +69,7 @@ export default function MyAppointments() {
             <div className="bg-slate-700/50 p-6 rounded-xl">
               <h4 className="text-lg font-semibold text-white mb-3">📧 Email Notifications</h4>
               <p className="text-slate-300 text-sm">
-                You&apos;ll receive email confirmations when your appointment is confirmed by our team. 
+                You will receive email confirmations when your appointment is confirmed by our team. 
                 The email includes meeting details, document checklist, and contact information.
               </p>
             </div>
