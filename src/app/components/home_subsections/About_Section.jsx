@@ -164,7 +164,7 @@ export default function About_Section() {
                   "Certified Public Accountant (CPA)",
                   "IRS Enrolled Agent",
                   "QuickBooks ProAdvisor",
-                  "Master's in Taxation",
+                  "Master&apos;s in Taxation",
                 ].map((item, i) => (
                   <div
                     key={i}
