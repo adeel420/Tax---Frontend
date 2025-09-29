@@ -69,7 +69,7 @@ export default function MyAppointments() {
             <div className="bg-slate-700/50 p-6 rounded-xl">
               <h4 className="text-lg font-semibold text-white mb-3">📧 Email Notifications</h4>
               <p className="text-slate-300 text-sm">
-                You'll receive email confirmations when your appointment is confirmed by our team. 
+                You&apos;ll receive email confirmations when your appointment is confirmed by our team. 
                 The email includes meeting details, document checklist, and contact information.
               </p>
             </div>
