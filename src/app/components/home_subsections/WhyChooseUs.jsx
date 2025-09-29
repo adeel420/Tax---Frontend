@@ -64,7 +64,7 @@ export default function WhyChooseUs() {
 
   return (
     <section className="py-16 sm:py-20 lg:py-28 bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-12">
+      <div className="w-[90%] mx-auto">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6">

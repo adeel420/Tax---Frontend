@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
 import DocumentsSection from "../components/userDashboard_subsections/DocumentsSection";
+import AppointmentsSection from "../components/userDashboard_subsections/AppointmentsSection";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("document");
@@ -49,6 +50,7 @@ export default function Page() {
 
   const menuItems = [
     { id: "document", label: "Documents", icon: "📄" },
+    { id: "appointments", label: "Appointments", icon: "📅" },
     { id: "clients", label: "Clients", icon: "👥" },
     { id: "returns", label: "Tax Returns", icon: "📄" },
     { id: "contact", label: "Contact", icon: "📧" },
@@ -192,6 +194,8 @@ export default function Page() {
         {/* Dashboard Content */}
         <main className="p-4 md:p-6">
           {activeTab === "document" && <DocumentsSection />}
+
+          {activeTab === "appointments" && <AppointmentsSection />}
 
           {/* Other Tabs */}
           {activeTab === "clients" && (

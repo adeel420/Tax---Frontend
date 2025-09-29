@@ -105,7 +105,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-slate-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
           <p className="text-slate-400 text-sm sm:text-base mb-4 md:mb-0">
-            © 2024 Eliaselitaxservices. All rights reserved.
+            © 2025 Eliaselitaxservices. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center md:justify-end space-x-6">
             <a
