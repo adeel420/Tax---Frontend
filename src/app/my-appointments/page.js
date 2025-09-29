@@ -35,7 +35,7 @@ export default function MyAppointments() {
               <div className="bg-blue-900/50 p-6 rounded-xl">
                 <h4 className="text-lg font-semibold text-blue-300 mb-3">📋 What to Bring</h4>
                 <ul className="text-slate-300 space-y-2 text-sm">
-                  <li>• Valid ID (Driver's License/Passport)</li>
+                  <li>• Valid ID (Driver&apos;s License/Passport)</li>
                   <li>• Social Security Card</li>
                   <li>• W-2 forms from all employers</li>
                   <li>• 1099 forms (if applicable)</li>
