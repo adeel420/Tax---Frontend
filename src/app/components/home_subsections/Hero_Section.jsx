@@ -37,9 +37,8 @@ export default function Hero_Section() {
           <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
             {/* Left Content */}
             <div
-              className={`space-y-8 transition-all duration-1000 ${
-                isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
-              }`}
+              className={`space-y-8 transition-all duration-1000 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
+                }`}
             >
               <div className="space-y-4">
                 <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-300 text-xs sm:text-sm font-medium animate-fade-in">
@@ -63,9 +62,8 @@ export default function Hero_Section() {
 
               {/* Buttons */}
               <div
-                className={`flex flex-col sm:flex-row gap-4 transition-all duration-1000 delay-600 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-                }`}
+                className={`flex flex-col sm:flex-row gap-4 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+                  }`}
               >
                 <button className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25">
                   <span className="flex items-center justify-center">
@@ -93,9 +91,8 @@ export default function Hero_Section() {
 
               {/* Stats */}
               <div
-                className={`grid grid-cols-3 gap-4 sm:gap-8 pt-6 sm:pt-8 transition-all duration-1000 delay-800 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-                }`}
+                className={`grid grid-cols-3 gap-4 sm:gap-8 pt-6 sm:pt-8 transition-all duration-1000 delay-800 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+                  }`}
               >
                 <div className="text-center">
                   <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 animate-count-up">
@@ -128,9 +125,8 @@ export default function Hero_Section() {
 
             {/* Right Visual */}
             <div
-className={`relative mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${
-  isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
-}`}
+              className={`relative mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
+                }`}
             >
               <div className="relative w-full max-w-sm mx-auto lg:max-w-lg">
                 {/* Main Card */}
