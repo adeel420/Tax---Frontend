@@ -137,22 +137,22 @@ export default function Hero_Section() {
 
             {/* Right Visual */}
             <div
-              className={`relative transition-all duration-1000 delay-300 ${isVisible
+              className={`relative mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${isVisible
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 translate-x-10"
                 }`}
             >
-              <div className="relative max-w-xs sm:max-w-md lg:max-w-lg mx-auto ml-30">
+              <div className="relative w-full max-w-sm mx-auto lg:max-w-lg">
                 {/* Main Card */}
-                <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 sm:p-8 shadow-2xl transform hover:scale-105 transition-all duration-500 ">
-                  <div className="space-y-6">
+                <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl transform hover:scale-105 transition-all duration-500">
+                  <div className="space-y-4 lg:space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
+                      <h3 className="text-base sm:text-lg lg:text-2xl font-bold text-white">
                         Tax Calculator
                       </h3>
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center animate-spin-slow">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg lg:rounded-xl flex items-center justify-center animate-spin-slow">
                         <svg
-                          className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                          className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -167,28 +167,28 @@ export default function Hero_Section() {
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 sm:p-4 bg-slate-700/50 rounded-xl">
-                        <span className="text-slate-300 text-sm sm:text-base">
+                    <div className="space-y-3 lg:space-y-4">
+                      <div className="flex justify-between items-center p-2.5 sm:p-3 lg:p-4 bg-slate-700/50 rounded-lg lg:rounded-xl">
+                        <span className="text-slate-300 text-xs sm:text-sm lg:text-base">
                           Annual Income
                         </span>
-                        <span className="text-white font-semibold text-sm sm:text-base">
+                        <span className="text-white font-semibold text-xs sm:text-sm lg:text-base">
                           $75,000
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 sm:p-4 bg-slate-700/50 rounded-xl">
-                        <span className="text-slate-300 text-sm sm:text-base">
+                      <div className="flex justify-between items-center p-2.5 sm:p-3 lg:p-4 bg-slate-700/50 rounded-lg lg:rounded-xl">
+                        <span className="text-slate-300 text-xs sm:text-sm lg:text-base">
                           Tax Owed
                         </span>
-                        <span className="text-red-400 font-semibold text-sm sm:text-base">
+                        <span className="text-red-400 font-semibold text-xs sm:text-sm lg:text-base">
                           $12,500
                         </span>
                       </div>
-                      <div className="flex justify-between items-center p-3 sm:p-4 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-500/30 rounded-xl">
-                        <span className="text-emerald-300 text-sm sm:text-base">
+                      <div className="flex justify-between items-center p-2.5 sm:p-3 lg:p-4 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-500/30 rounded-lg lg:rounded-xl">
+                        <span className="text-emerald-300 text-xs sm:text-sm lg:text-base">
                           Potential Refund
                         </span>
-                        <span className="text-emerald-400 font-bold text-lg sm:text-xl">
+                        <span className="text-emerald-400 font-bold text-sm sm:text-lg lg:text-xl">
                           $3,250
                         </span>
                       </div>
@@ -197,9 +197,9 @@ export default function Hero_Section() {
                 </div>
 
                 {/* Floating Elements */}
-                <div className="absolute -top-4 sm:-top-6 -right-4 sm:-right-6 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center animate-float">
+                <div className="absolute -top-2 sm:-top-4 lg:-top-6 -right-2 sm:-right-4 lg:-right-6 w-12 h-12 sm:w-16 sm:h-16 lg:w-24 lg:h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl lg:rounded-2xl flex items-center justify-center animate-float">
                   <svg
-                    className="w-8 h-8 sm:w-12 sm:h-12 text-white"
+                    className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -213,9 +213,9 @@ export default function Hero_Section() {
                   </svg>
                 </div>
 
-                <div className="absolute -bottom-3 sm:-bottom-4 -left-3 sm:-left-4 w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center animate-bounce">
+                <div className="absolute -bottom-2 sm:-bottom-3 lg:-bottom-4 -left-2 sm:-left-3 lg:-left-4 w-10 h-10 sm:w-14 sm:h-14 lg:w-20 lg:h-20 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg lg:rounded-xl flex items-center justify-center animate-bounce">
                   <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-white"
+                    className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
