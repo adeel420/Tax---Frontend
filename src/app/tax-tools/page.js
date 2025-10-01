@@ -42,7 +42,7 @@ export default function TaxTools() {
             <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 max-w-2xl mx-auto">
               <div className="text-center">
                 <div className="text-6xl mb-4">🇺🇸</div>
-                <h3 className="text-2xl font-bold text-white mb-4">IRS Where's My Refund?</h3>
+                <h3 className="text-2xl font-bold text-white mb-4">IRS Where&apos;s My Refund?</h3>
                 <p className="text-slate-300 mb-6">
                   Check your federal tax refund status directly from the IRS official website
                 </p>
