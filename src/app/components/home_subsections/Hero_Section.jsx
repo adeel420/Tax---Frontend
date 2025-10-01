@@ -109,6 +109,12 @@ export default function Hero_Section() {
                     Happy Clients
                   </div>
                 </div>
+
+              </div>
+              <div className="text-center">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 animate-count-up">
+                  5+
+
                 <div className="text-center">
                   <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 animate-count-up">
                     $10M+
@@ -116,6 +122,7 @@ export default function Hero_Section() {
                   <div className="text-slate-400 text-xs sm:text-sm">
                     Refunds Secured
                   </div>
+
                 </div>
                 <div className="text-center">
                   <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 animate-count-up">

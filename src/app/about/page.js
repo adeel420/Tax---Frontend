@@ -11,7 +11,7 @@ export default function Page() {
   }, []);
 
   const stats = [
-    { number: "25+", label: "Years Experience" },
+    { number: "5+", label: "Years Experience" },
     { number: "15K+", label: "Happy Clients" },
     { number: "$50M+", label: "Refunds Secured" },
     { number: "98%", label: "Success Rate" },
@@ -23,7 +23,7 @@ export default function Page() {
       role: "Founder & CEO",
       credentials: "CPA, EA",
       description:
-        "25+ years of tax expertise with specialization in business and individual tax planning.",
+        "5+ years of tax expertise with specialization in business and individual tax planning.",
       avatar: "JS",
     },
     {
@@ -123,7 +123,7 @@ export default function Page() {
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
               Your trusted partner in tax preparation and financial planning for
-              over 25 years
+              over 5 years
             </p>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function Page() {
                 keep more of their hard-earned money.
               </p>
               <p>
-                Over the past 25 years, we&apos;ve grown from a one-person
+                Over the past 5 years, we&apos;ve grown from a one-person
                 operation to a team of certified professionals, but our
                 commitment to personalized service and maximum refunds has never
                 wavered.
