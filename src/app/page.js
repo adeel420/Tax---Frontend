@@ -17,7 +17,7 @@ export default function Home() {
     setIsVisible(true);
   }, []);
   return (
-    <div>
+    <div className="w-full">
       <Hero_Section />
       <AboutSection />
       <WhyChooseUs />

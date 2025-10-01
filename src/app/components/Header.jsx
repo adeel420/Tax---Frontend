@@ -94,11 +94,14 @@ export default function Header() {
             <Link href="/" className="nav-link">
               Home
             </Link>
+            <Link href="/about" className="nav-link">
+              About
+            </Link>
             <Link href="/services" className="nav-link">
               Services
             </Link>
-            <Link href="/about" className="nav-link">
-              About
+            <Link href="/appointment" className="nav-link">
+              Schedule Consultation
             </Link>
             <Link href="/contact" className="nav-link">
               Contact
@@ -112,10 +115,10 @@ export default function Header() {
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer">
                   {user?.name
                     ? user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
                     : ""}
                 </div>
               </Popover>
@@ -159,9 +162,8 @@ export default function Header() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
-          }`}
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
+            }`}
         >
           <nav className="flex flex-col space-y-4 pt-4 border-t text-white border-slate-800">
             <Link href="/" className="nav-link">
@@ -182,10 +184,10 @@ export default function Header() {
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer">
                     {user?.name
                       ? user.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
                       : ""}
                   </div>
                 </Popover>

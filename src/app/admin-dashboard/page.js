@@ -7,6 +7,7 @@ import axios from "axios";
 import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
 import DocumentViewSection from "../components/adminDashboard_subsections/DocumentViewSection";
 import NewsletterManagement from "../components/adminDashboard_subsections/NewsletterManagement";
+import AppointmentManagement from "../components/adminDashboard_subsections/AppointmentManagement";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -53,6 +54,7 @@ export default function Page() {
     { id: "clients", label: "Clients", icon: "👥" },
     { id: "document", label: "Documents", icon: "📄" },
     { id: "contact", label: "Contact", icon: "📧" },
+    { id: "appointments", label: "Appointments", icon: "📅" },
     { id: "newsLetter", label: "News Letter", icon: "📩" },
     { id: "settings", label: "Settings", icon: "⚙️" },
     { id: "logout", label: "Logout", icon: "⏻" },
@@ -321,6 +323,8 @@ export default function Page() {
               <Contact_subsection />
             </div>
           )}
+
+          {activeTab === "appointments" && <AppointmentManagement />}
 
           {activeTab === "newsLetter" && <NewsletterManagement />}
 

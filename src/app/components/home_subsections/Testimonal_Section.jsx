@@ -62,7 +62,7 @@ export default function Testimonial_Section() {
         <div className="absolute bottom-10 sm:bottom-20 right-5 sm:right-20 w-48 h-48 sm:w-80 sm:h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="w-[90%] mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
