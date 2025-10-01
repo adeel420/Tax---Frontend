@@ -20,19 +20,23 @@ export default function About_Section() {
   return (
     <section
       id="about-us"
-      className="py-16 sm:py-20 lg:py-28 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-28 bg-gradient-to-br from-blue-100 via-slate-200 to-blue-300 relative overflow-hidden"
     >
       {/* Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-10 right-5 sm:top-20 sm:right-20 w-40 h-40 sm:w-64 sm:h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-5 sm:bottom-20 sm:left-20 w-56 h-56 sm:w-80 sm:h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 right-5 sm:top-20 sm:right-20 w-40 h-40 sm:w-64 sm:h-64 bg-blue-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-5 sm:bottom-20 sm:left-20 w-56 h-56 sm:w-80 sm:h-80 bg-emerald-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-200/10 to-pink-200/10 rounded-full blur-3xl"></div>
+        {/* Geometric patterns */}
+        <div className="absolute top-20 left-20 w-32 h-32 border border-blue-200/30 rounded-lg rotate-45"></div>
+        <div className="absolute bottom-32 right-32 w-24 h-24 border border-emerald-200/30 rounded-full"></div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+      <div className="w-[90%] mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left - Owner Image */}
           <div
-            className={`relative transition-all duration-1000 ${
+            className={`relative transition-all duration-1000 -ml-40 ${
               isVisible
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 -translate-x-10"
@@ -113,19 +117,19 @@ export default function About_Section() {
             }`}
           >
             <div className="space-y-6">
-              <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500/20 border border-blue-400/30 rounded-full text-blue-300 text-xs sm:text-sm font-medium">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></span>
+              <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-100 border border-blue-300 rounded-full text-blue-700 text-xs sm:text-sm font-medium">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
                 Meet Our Founder
               </div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-800 leading-tight">
                 <span className="block">Hermano M.</span>
-                <span className="block text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                <span className="block text-xl sm:text-2xl lg:text-3xl bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent">
                   CPA, Tax Expert
                 </span>
               </h2>
 
-              <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed">
                 With over 5 years of experience in tax preparation and financial
                 planning, Hermano founded Eliaselitaxservices to provide
                 personalized, expert tax services that maximize refunds and
@@ -133,19 +137,19 @@ export default function About_Section() {
               </p>
 
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-slate-700/50">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1">
+                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-blue-200/50 shadow-lg">
+                  <div className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-800 mb-1">
                     5+
                   </div>
-                  <div className="text-slate-400 text-xs sm:text-sm">
+                  <div className="text-slate-600 text-xs sm:text-sm">
                     Years Experience
                   </div>
                 </div>
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-slate-700/50">
-                  <div className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1">
+                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-emerald-200/50 shadow-lg">
+                  <div className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-800 mb-1">
                     CPA
                   </div>
-                  <div className="text-slate-400 text-xs sm:text-sm">
+                  <div className="text-slate-600 text-xs sm:text-sm">
                     Certified Professional
                   </div>
                 </div>
@@ -154,7 +158,7 @@ export default function About_Section() {
 
             {/* Credentials */}
             <div className="space-y-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-white">
+              <h3 className="text-lg sm:text-xl font-semibold text-slate-800">
                 Credentials & Expertise
               </h3>
               <div className="grid grid-cols-1 gap-2 sm:gap-3">
@@ -162,14 +166,14 @@ export default function About_Section() {
                   "Certified Public Accountant (CPA)",
                   "IRS Enrolled Agent",
                   "QuickBooks ProAdvisor",
-                  "Master's in Taxation",
+                  "Master&apos;s in Taxation",
                 ].map((item, i) => (
                   <div
                     key={i}
                     className="flex items-center space-x-2 sm:space-x-3"
                   >
-                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full"></div>
-                    <span className="text-slate-300 text-sm sm:text-base">
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full"></div>
+                    <span className="text-slate-600 text-sm sm:text-base">
                       {item}
                     </span>
                   </div>
@@ -179,10 +183,10 @@ export default function About_Section() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105">
+              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Schedule Consultation
               </button>
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-slate-600 hover:border-slate-500 text-white font-semibold rounded-xl transition-all duration-300 hover:bg-slate-800/50">
+              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-slate-400 hover:border-slate-500 text-slate-700 font-semibold rounded-xl transition-all duration-300 hover:bg-white/50 backdrop-blur-sm">
                 View Credentials
               </button>
             </div>

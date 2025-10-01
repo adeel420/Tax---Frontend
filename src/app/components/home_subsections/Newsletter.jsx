@@ -39,7 +39,7 @@ export default function Newsletter() {
         <div className="absolute bottom-10 right-10 w-56 sm:w-80 h-56 sm:h-80 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="w-[90%] mx-auto relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Heading */}
           <div className="mb-8 sm:mb-12">
@@ -90,7 +90,7 @@ export default function Newsletter() {
                   />
                 </svg>
                 <span className="font-semibold">
-                  Thank you! You're subscribed to our newsletter.
+                  Thank you! You&apos;re subscribed to our newsletter.
                 </span>
               </div>
             </div>
