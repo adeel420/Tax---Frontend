@@ -120,7 +120,7 @@ export default function Hero_Section() {
               </div>
               <div className="text-center">
                 <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 animate-count-up">
-                  25+
+                  5+
                 </div>
                 <div className="text-slate-400 text-xs sm:text-sm">
                   Years Experience

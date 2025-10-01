@@ -17,8 +17,8 @@ export default function WhyChooseUs() {
         </svg>
       ),
       title: "Certified Experts",
-      description: "IRS-certified tax professionals with 25+ years experience",
-      stat: "25+ Years",
+      description: "IRS-certified tax professionals with 5+ years experience",
+      stat: "5+ Years",
     },
     {
       icon: (
