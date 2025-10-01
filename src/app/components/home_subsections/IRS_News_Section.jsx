@@ -20,9 +20,9 @@ const IRS_News_Section = () => {
     },
     {
       id: 2,
-      img: "https://www.irs.gov/pub/image/scamhomepage.jpg",
-      title: "Scams and Schemes Alert",
-      desc: "Find the latest information on trending scams and schemes",
+      img: "https://www.irs.gov/pub/image/vita-recruit-hpsize.jpg",
+      title: "Volunteers needed",
+      desc: "Learn to prepare taxes and help your comunity",
       link: "/scam-detail",
     },
   ];
