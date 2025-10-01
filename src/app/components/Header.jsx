@@ -100,6 +100,9 @@ export default function Header() {
             <Link href="/services" className="nav-link">
               Services
             </Link>
+            <Link href="/tax-tools" className="nav-link">
+              Tax Tools
+            </Link>
             <Link href="/booking" className="nav-link">
               Schedule Consultation
             </Link>
@@ -169,17 +172,23 @@ export default function Header() {
             <Link href="/" className="nav-link">
               Home
             </Link>
+            <Link href="/about" className="nav-link">
+              About
+            </Link>
             <Link href="/services" className="nav-link">
               Services
             </Link>
-            <Link href="/about" className="nav-link">
-              About
+            <Link href="/tax-tools" className="nav-link">
+              Tax Tools
+            </Link>
+            <Link href="/booking" className="nav-link">
+              Schedule Consultation
             </Link>
             <Link href="/contact" className="nav-link">
               Contact
             </Link>
             {token ? (
-              <div className="mt-4 flex justify-start">
+              <div className="mt-4 flex justify-center">
                 <Popover content={content} trigger="click">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer">
                     {user?.name
@@ -194,10 +203,10 @@ export default function Header() {
               </div>
             ) : (
               <div className="flex flex-col space-y-3 mt-4">
-                <Link href="/login" className="btn-primary w-full text-center">
+                <Link href="/login" className="btn-primary w-32 text-center">
                   Login
                 </Link>
-                <Link href="/signup" className="btn-primary w-full text-center">
+                <Link href="/signup" className="btn-primary w-32 text-center">
                   Signup
                 </Link>
               </div>
