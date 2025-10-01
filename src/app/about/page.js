@@ -12,8 +12,10 @@ export default function Page() {
 
   const stats = [
     { number: "5+", label: "Years Experience" },
+
     { number: "7K+", label: "Happy Clients" },
     { number: "$10M+", label: "Refunds Secured" },
+
     { number: "98%", label: "Success Rate" },
   ];
 
@@ -168,7 +170,7 @@ export default function Page() {
                 keep more of their hard-earned money.
               </p>
               <p>
-                Over the past 25 years, we&apos;ve grown from a one-person
+                Over the past 5 years, we&apos;ve grown from a one-person
                 operation to a team of certified professionals, but our
                 commitment to personalized service and maximum refunds has never
                 wavered.
