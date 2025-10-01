@@ -8,9 +8,9 @@ export default function Page() {
   const router = useRouter();
   const [article] = useState({
     id: 1,
-    title: "Scam Prevention Tips",
-    subtitle: "Important changes and deadlines for the upcoming tax season",
-    image: "https://www.irs.gov/pub/image/scamhomepage.jpg",
+    image: "https://www.irs.gov/pub/image/vita-recruit-hpsize.jpg",
+    title: "Volunteers needed",
+    subtitle: "Learn to prepare taxes and help your comunity",
     publishDate: "2024-01-20",
     author: "IRS Communications",
     category: "Tax Updates",
@@ -39,7 +39,7 @@ export default function Page() {
       image:
         "https://www.irs.gov/pub/image/homepage-news-special-filing-250-208_0.png",
       excerpt: "Important changes and deadlines for the upcoming tax season",
-      link: "/tax-detail",
+      p: "/tax-detail",
     },
     {
       id: 3,
@@ -47,14 +47,14 @@ export default function Page() {
       title: "Disaster Relief",
       excerpt:
         "Information on recent tax relief for taxpayers affected by disasters",
-      link: "/disaster-detail",
+      p: "/disaster-detail",
     },
   ];
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 overflow-hidden">
+      {/* Hero div */}
+      <div className="relative py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -110,10 +110,10 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Article Content */}
-      <section className="py-16">
+      <div className="py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             {/* Featured Image */}
@@ -126,22 +126,76 @@ export default function Page() {
             </div>
 
             {/* Article Body */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg mb-12">
-              <div
-                className="prose prose-lg max-w-none text-slate-700 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: article.content }}
-                style={{
-                  fontSize: "18px",
-                  lineHeight: "1.8",
-                }}
-              />
-            </div>
+            <main className="mx-auto max-w-4xl px-4 py-8 text-black">
+              <article className="prose prose-neutral max-w-none">
+                <p className="text-pretty leading-6">
+                  Learn to prepare taxes and make a difference in your community
+                  at the same time. How can you make a difference? Simple.
+                  Volunteer to help your community by preparing taxes free of
+                  charge with the Volunteer Income Tax Assistance (VITA) or Tax
+                  Counseling for the Elderly (TCE) Programs.
+                </p>
+                <p className="text-pretty leading-6">
+                  You will receive training to provide free tax help for low to
+                  moderate income families who need assistance preparing their
+                  tax returns. As a volunteer, you will join the thousands of
+                  others who each year prepare millions of tax returns at
+                  thousands of tax sites nationwide.
+                </p>
+                <p className="text-pretty leading-6">
+                  If you have an interest in partnering with us to sponsor or
+                  host a free tax preparation site in your area you can also
+                  complete and submit the{" "}
+                  <a className="text-blue-600 hover:underline" href="#">
+                    VITA/TCE volunteer and partner sign up form
+                  </a>{" "}
+                  and we will be sure to follow up on your inquiry.
+                </p>
+                <p className="text-pretty leading-6">
+                  As a committed tax volunteer, you’ll be assigned to work with
+                  a sponsoring organization, get free tax law training and then
+                  begin volunteering at a location in your community. Training
+                  is offered both online and in the classroom. Tax sites are
+                  generally open nights and weekends, and the hours are
+                  flexible. You will surely find a volunteer site close to you.
+                </p>
+
+                <div title="Interested?">
+                  <p className="text-pretty leading-6">
+                    For additional information and next steps, submit your
+                    inquiry now using the{" "}
+                    <a className="text-blue-600 hover:underline" href="#">
+                      VITA/TCE volunteer and partner sign up form
+                    </a>{" "}
+                    and you will be one step closer to becoming a VITA or TCE
+                    tax volunteer and giving back to your community. We will
+                    share your volunteer interest with sponsoring organizations
+                    in your area for follow up contact.
+                  </p>
+                </div>
+
+                <div title="Obtaining printed products">
+                  <p className="text-pretty leading-6">
+                    Limited printed products are available only to volunteers in
+                    the VITA and TCE programs. The assigned partner organization
+                    or site coordinator will provide all printed products needed
+                    for volunteer training. The public can download electronic
+                    versions of these products. The IRS provides access to the
+                    electronic version of the products on the{" "}
+                    <a className="text-blue-600 hover:underline" href="#">
+                      Forms, Instructions &amp; Publications
+                    </a>{" "}
+                    webpage.
+                  </p>
+                </div>
+              </article>
+            </main>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Related Articles */}
-      <section className="py-16 bg-white">
+      <div className="py-16 bg-white">
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl font-bold text-slate-900 text-center mb-12">
@@ -152,7 +206,7 @@ export default function Page() {
               {relatedArticles.map((related) => (
                 <div
                   key={related.id}
-                  onClick={() => router.push(related.link)}
+                  onClick={() => router.push(related.p)}
                   className="bg-slate-50 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group cursor-pointer"
                 >
                   <div className="flex gap-6">
@@ -173,10 +227,10 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Back to News */}
-      <section className="py-12 bg-slate-50">
+      <div className="py-12 bg-slate-50">
         <div className="container mx-auto px-6 text-center">
           <Link
             href={"/#irs-news"}
@@ -185,7 +239,7 @@ export default function Page() {
             ← Back to All News
           </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

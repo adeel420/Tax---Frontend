@@ -43,9 +43,10 @@ export default function Page() {
     },
     {
       id: 3,
-      title: "Scam Prevention Tips",
-      image: "https://www.irs.gov/pub/image/scamhomepage.jpg",
-      excerpt: "How to protect yourself from tax-related scams",
+      image: "https://www.irs.gov/pub/image/vita-recruit-hpsize.jpg",
+      title: "Volunteers needed",
+      excerpt: "Learn to prepare taxes and help your comunity",
+
       link: "/scam-detail",
     },
   ];
@@ -53,30 +54,34 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 overflow-hidden">
+      <section className="relative py-16 sm:py-20 lg:py-28 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-56 sm:w-72 h-56 sm:h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-64 sm:w-80 h-64 sm:h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center text-white">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <span className="px-4 py-2 bg-blue-500/20 border border-blue-400/30 rounded-full text-blue-300 text-sm font-medium">
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+              <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500/20 border border-blue-400/30 rounded-full text-blue-300 text-xs sm:text-sm font-medium">
                 {article.category}
               </span>
-              <span className="text-slate-300 text-sm">{article.readTime}</span>
+              <span className="text-slate-300 text-xs sm:text-sm">
+                {article.readTime}
+              </span>
             </div>
 
-            <h1 className="text-5xl font-bold mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-snug sm:leading-tight">
               {article.title}
             </h1>
-            <p className="text-xl text-slate-300 mb-8">{article.subtitle}</p>
+            <p className="text-base sm:text-lg lg:text-xl text-slate-300 mb-8">
+              {article.subtitle}
+            </p>
 
-            <div className="flex items-center justify-center gap-6 text-slate-300">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-slate-300 text-sm sm:text-base">
               <div className="flex items-center">
                 <svg
-                  className="w-5 h-5 mr-2"
+                  className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -92,7 +97,7 @@ export default function Page() {
               </div>
               <div className="flex items-center">
                 <svg
-                  className="w-5 h-5 mr-2"
+                  className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -112,26 +117,26 @@ export default function Page() {
       </section>
 
       {/* Article Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-6">
+      <section className="py-12 sm:py-16">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
             {/* Featured Image */}
-            <div className="mb-12">
+            <div className="mb-8 sm:mb-12">
               <img
                 src={article.image}
                 alt={article.title}
-                className="w-full h-96 object-cover rounded-2xl shadow-lg"
+                className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-2xl shadow-lg"
               />
             </div>
 
             {/* Article Body */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg mb-12">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg mb-12">
               <div
-                className="prose prose-lg max-w-none text-slate-700 leading-relaxed"
+                className="prose prose-base sm:prose-lg max-w-none text-slate-700 leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: article.content }}
                 style={{
-                  fontSize: "18px",
-                  lineHeight: "1.8",
+                  fontSize: "16px",
+                  lineHeight: "1.7",
                 }}
               />
             </div>
@@ -140,31 +145,33 @@ export default function Page() {
       </section>
 
       {/* Related Articles */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-6">
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-slate-900 text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 text-center mb-10 sm:mb-12">
               Related Articles
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
               {relatedArticles.map((related) => (
                 <div
                   key={related.id}
                   onClick={() => router.push(related.link)}
-                  className="bg-slate-50 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group cursor-pointer"
+                  className="bg-slate-50 rounded-2xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300 group cursor-pointer"
                 >
-                  <div className="flex gap-6">
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                     <img
                       src={related.image}
                       alt={related.title}
-                      className="w-24 h-24 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
+                      className="w-full sm:w-24 h-40 sm:h-24 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
                         {related.title}
                       </h3>
-                      <p className="text-slate-600">{related.excerpt}</p>
+                      <p className="text-slate-600 text-sm sm:text-base">
+                        {related.excerpt}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -175,11 +182,11 @@ export default function Page() {
       </section>
 
       {/* Back to News */}
-      <section className="py-12 bg-slate-50">
-        <div className="container mx-auto px-6 text-center">
+      <section className="py-10 sm:py-12 bg-slate-50">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
           <Link
             href={"/#irs-news"}
-            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105"
+            className="inline-block px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
           >
             ← Back to All News
           </Link>
