@@ -36,11 +36,11 @@ export default function About_Section() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left - Owner Image */}
           <div
-            className={`relative transition-all duration-1000 -ml-40 ${
-              isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-10"
-            }`}
+
+            className={`relative transition-all duration-1000 lg:-ml-40 ${isVisible
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 -translate-x-10"
+              }`}
           >
             <div className="relative max-w-xs sm:max-w-md mx-auto">
               {/* Main Frame */}
