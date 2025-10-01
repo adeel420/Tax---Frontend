@@ -131,7 +131,7 @@ export default function About_Section() {
 
               <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed">
                 With over 5 years of experience in tax preparation and financial
-                planning, John founded Eliaselitaxservices to provide
+                planning, Hermano founded Eliaselitaxservices to provide
                 personalized, expert tax services that maximize refunds and
                 minimize stress for individuals and businesses.
               </p>
