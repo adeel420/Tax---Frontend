@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { isAuthenticated, getUserData, logout } from "../utils/auth";
 import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
 import DocumentViewSection from "../components/adminDashboard_subsections/DocumentViewSection";
 import NewsletterManagement from "../components/adminDashboard_subsections/NewsletterManagement";
 import AppointmentManagement from "../components/adminDashboard_subsections/AppointmentManagement";
+
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -55,34 +57,43 @@ export default function Page() {
     { id: "document", label: "Documents", icon: "📄" },
     { id: "contact", label: "Contact", icon: "📧" },
     { id: "appointments", label: "Appointments", icon: "📅" },
+
     { id: "newsLetter", label: "News Letter", icon: "📩" },
     { id: "settings", label: "Settings", icon: "⚙️" },
     { id: "logout", label: "Logout", icon: "⏻" },
   ];
 
   const handleLogout = () => {
+    logout();
     toast.success("Admin Dashboard Logout");
     router.push("/");
   };
 
-  const handleGetLogin = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER}/user/login-data`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      setUser(response.data);
-    } catch (err) {
-      console.log(err);
+  const checkAuthAndRole = async () => {
+    if (!isAuthenticated()) {
+      toast.error("Please login to access dashboard");
+      router.push("/login");
+      return;
     }
+
+    const userData = await getUserData();
+    if (!userData) {
+      toast.error("Session expired. Please login again");
+      router.push("/login");
+      return;
+    }
+
+    if (userData.role !== 1) {
+      toast.error("Access denied. Admin privileges required");
+      router.push("/user-dashboard");
+      return;
+    }
+
+    setUser(userData);
   };
 
   useEffect(() => {
-    handleGetLogin();
+    checkAuthAndRole();
   }, []);
 
   return (
@@ -323,6 +334,8 @@ export default function Page() {
               <Contact_subsection />
             </div>
           )}
+
+
 
           {activeTab === "appointments" && <AppointmentManagement />}
 

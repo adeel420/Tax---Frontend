@@ -11,9 +11,9 @@ export default function Page() {
   }, []);
 
   const stats = [
-    { number: "25+", label: "Years Experience" },
-    { number: "15K+", label: "Happy Clients" },
-    { number: "$50M+", label: "Refunds Secured" },
+    { number: "5+", label: "Years Experience" },
+    { number: "7K+", label: "Happy Clients" },
+    { number: "$10M+", label: "Refunds Secured" },
     { number: "98%", label: "Success Rate" },
   ];
 
@@ -23,7 +23,7 @@ export default function Page() {
       role: "Founder & CEO",
       credentials: "CPA, EA",
       description:
-        "25+ years of tax expertise with specialization in business and individual tax planning.",
+        "5+ years of tax expertise with specialization in business and individual tax planning.",
       avatar: "JS",
     },
     {
@@ -110,20 +110,20 @@ export default function Page() {
   return (
     <div className="min-h-screen pt-[70px] md:pt-[10px] bg-white">
       {/* Hero Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden">
+      <section className=" py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-40 sm:w-72 h-40 sm:h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-48 sm:w-80 h-48 sm:h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="pt-20 container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center transition-all duration-1000">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6">
               About Eliaselitaxservices
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
               Your trusted partner in tax preparation and financial planning for
-              over 25 years
+              over 5 years
             </p>
           </div>
         </div>

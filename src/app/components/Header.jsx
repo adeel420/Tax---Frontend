@@ -100,7 +100,7 @@ export default function Header() {
             <Link href="/services" className="nav-link">
               Services
             </Link>
-            <Link href="/appointment" className="nav-link">
+            <Link href="/booking" className="nav-link">
               Schedule Consultation
             </Link>
             <Link href="/contact" className="nav-link">
