@@ -36,9 +36,30 @@ export default function Page() {
       localStorage.setItem("token", response?.data?.token);
       setFormData({ email: "", password: "" });
 
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
+      // Get user data to determine redirect
+      try {
+        const userResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER}/user/login-data`,
+          {
+            headers: {
+              Authorization: `Bearer ${response?.data?.token}`,
+            },
+          }
+        );
+        
+        const userData = userResponse.data;
+        setTimeout(() => {
+          if (userData.role === 1) {
+            router.push("/admin-dashboard");
+          } else {
+            router.push("/user-dashboard");
+          }
+        }, 2000);
+      } catch (err) {
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      }
     } catch (error) {
       // ✅ Safely show backend error messages
       if (error.response && error.response.data && error.response.data.error) {
