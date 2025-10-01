@@ -128,9 +128,9 @@ export default function Hero_Section() {
 
             {/* Right Visual */}
             <div
-              className={`relative mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${
-                isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
-              }`}
+className={`relative mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${
+  isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
+}`}
             >
               <div className="relative w-full max-w-sm mx-auto lg:max-w-lg">
                 {/* Main Card */}
