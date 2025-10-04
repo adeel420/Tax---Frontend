@@ -13,20 +13,13 @@ export default function DocumentsSection() {
     misc: [],
   });
 
-  const [pendingDocuments, setPendingDocuments] = useState({
-    driverLicense: null,
-    socialSecurity: null,
-    w2: null,
-    f1099: null,
-    form1040: null,
-    misc: [],
-  });
-
+  const [selectedFiles, setSelectedFiles] = useState({});
   const [dragActive, setDragActive] = useState("");
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
-  const [loadingStates, setLoadingStates] = useState({});
-  const [submitting, setSubmitting] = useState(false);
+  const [uploadingAll, setUploadingAll] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const documentTypes = [
     { key: "driverLicense", label: "Driver License", icon: "🆔" },
@@ -36,12 +29,12 @@ export default function DocumentsSection() {
     { key: "form1040", label: "Form 1040", icon: "📊" },
   ];
 
-  // Fetch user data and existing documents on component mount
   const handleGetLogin = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("No token found");
+        setInitialLoading(false);
         return;
       }
 
@@ -55,22 +48,25 @@ export default function DocumentsSection() {
       );
       setUser(response.data);
 
-      // Fetch existing documents after getting user data
       if (response.data.id) {
         await fetchExistingDocuments(response.data.id);
+      } else {
+        setInitialLoading(false);
       }
     } catch (err) {
       console.error("Error fetching login data:", err);
       alert("Failed to load user data. Please refresh the page.");
+      setInitialLoading(false);
     }
   };
 
-  // Fetch existing documents for the user
+  console.log("user", user.id);
+
   const fetchExistingDocuments = async (userId) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER}/document/${userId}`,
+        `${process.env.NEXT_PUBLIC_SERVER}/document/user/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,15 +74,17 @@ export default function DocumentsSection() {
         }
       );
 
-      if (response.data) {
-        setDocuments(response.data);
+      console.log("user", response.data);
+      if (response.data && response.data.data) {
+        setDocuments(response.data.data);
       }
     } catch (err) {
-      // If no documents exist, that's fine - we'll start with empty state
       console.log(
         "No existing documents found or error fetching:",
         err.message
       );
+    } finally {
+      setInitialLoading(false);
     }
   };
 
@@ -95,13 +93,16 @@ export default function DocumentsSection() {
   }, []);
 
   const handleFileSelect = (type, file) => {
-    // Validate file size (10MB limit)
+    if (!user.id) {
+      alert("User not loaded yet. Please try again.");
+      return;
+    }
+
     if (file.size > 10 * 1024 * 1024) {
       alert("File size must be less than 10MB");
       return;
     }
 
-    // Validate file type
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
@@ -113,29 +114,130 @@ export default function DocumentsSection() {
       return;
     }
 
-    // Store file locally without uploading
-    const fileData = {
-      fileName: file.name,
-      file: file,
-      addedAt: new Date().toISOString(),
-    };
-
-    // Update pending documents state
     if (type === "misc") {
-      setPendingDocuments((prev) => ({
+      setSelectedFiles((prev) => ({
         ...prev,
-        misc: [...(prev.misc || []), fileData],
+        misc: [...(prev.misc || []), file],
       }));
     } else {
-      setPendingDocuments((prev) => ({
+      setSelectedFiles((prev) => ({
         ...prev,
-        [type]: fileData,
+        [type]: file,
       }));
     }
+  };
 
-    alert(
-      `${documentTypes.find((doc) => doc.key === type)?.label || "Document"} added! Click 'Submit Documents' to upload.`
+  const uploadSingleFile = async (type, file) => {
+    const formData = new FormData();
+    formData.append("userId", user.id.toString());
+    formData.append("docType", type);
+    formData.append("file", file);
+    formData.append("userEmail", user.email);
+
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_SERVER}/document/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
     );
+
+    return res.data;
+  };
+
+  const handleUploadAll = async () => {
+    if (Object.keys(selectedFiles).length === 0) {
+      alert("Please select at least one file to upload");
+      return;
+    }
+
+    setUploadingAll(true);
+
+    try {
+      const uploadPromises = [];
+      const uploadResults = [];
+
+      for (const [type, file] of Object.entries(selectedFiles)) {
+        if (type === "misc" && Array.isArray(file)) {
+          for (const miscFile of file) {
+            uploadPromises.push(
+              uploadSingleFile(type, miscFile)
+                .then((data) => {
+                  uploadResults.push({
+                    type,
+                    success: true,
+                    data,
+                    file: miscFile,
+                  });
+                })
+                .catch((err) => {
+                  uploadResults.push({
+                    type,
+                    success: false,
+                    error: err,
+                    file: miscFile,
+                  });
+                })
+            );
+          }
+        } else if (file) {
+          uploadPromises.push(
+            uploadSingleFile(type, file)
+              .then((data) => {
+                uploadResults.push({ type, success: true, data, file });
+              })
+              .catch((err) => {
+                uploadResults.push({ type, success: false, error: err, file });
+              })
+          );
+        }
+      }
+
+      await Promise.all(uploadPromises);
+
+      const newDocuments = { ...documents };
+      let successCount = 0;
+      let failCount = 0;
+
+      uploadResults.forEach((result) => {
+        if (result.success) {
+          successCount++;
+          const fileData = {
+            fileName: result.file.name,
+            fileUrl: result.data.document?.fileUrl || result.data.fileUrl,
+            uploadedAt: new Date().toISOString(),
+          };
+
+          if (result.type === "misc") {
+            newDocuments.misc = [...(newDocuments.misc || []), fileData];
+          } else {
+            newDocuments[result.type] = fileData;
+          }
+        } else {
+          failCount++;
+          console.error(`Failed to upload ${result.file.name}:`, result.error);
+        }
+      });
+
+      setDocuments(newDocuments);
+      setSelectedFiles({});
+      setEditMode(false);
+
+      if (failCount === 0) {
+        alert(`All ${successCount} document(s) uploaded successfully!`);
+      } else {
+        alert(
+          `Upload completed: ${successCount} successful, ${failCount} failed. Please check console for details.`
+        );
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("An error occurred during upload. Please try again.");
+    } finally {
+      setUploadingAll(false);
+    }
   };
 
   const handleDrop = (e, type) => {
@@ -154,23 +256,10 @@ export default function DocumentsSection() {
     setDragActive("");
   };
 
-  const removePendingDocument = (type, index = null) => {
-    if (type === "misc" && index !== null) {
-      setPendingDocuments((prev) => ({
-        ...prev,
-        misc: prev.misc.filter((_, i) => i !== index),
-      }));
-    } else {
-      setPendingDocuments((prev) => ({
-        ...prev,
-        [type]: null,
-      }));
-    }
-  };
-
-  const removeUploadedDocument = async (type, index = null) => {
+  const removeDocument = async (type, index = null) => {
     try {
-      setLoadingStates((prev) => ({ ...prev, [type]: true }));
+      setLoading(true);
+
       const token = localStorage.getItem("token");
 
       await axios.delete(
@@ -201,298 +290,305 @@ export default function DocumentsSection() {
       console.error("Error removing document:", err);
       alert("Failed to remove document. Please try again.");
     } finally {
-      setLoadingStates((prev) => ({ ...prev, [type]: false }));
+      setLoading(false);
     }
   };
 
-  const isDocumentTypeLoading = (type) => {
-    return loadingStates[type] || loading;
+  const cancelFileSelection = (type, miscIndex = null) => {
+    setSelectedFiles((prev) => {
+      const updated = { ...prev };
+
+      if (type === "misc" && miscIndex !== null) {
+        const miscFiles = [...(updated.misc || [])];
+        miscFiles.splice(miscIndex, 1);
+        if (miscFiles.length === 0) {
+          delete updated.misc;
+        } else {
+          updated.misc = miscFiles;
+        }
+      } else {
+        delete updated[type];
+      }
+
+      return updated;
+    });
   };
 
-  const hasPendingDocuments = () => {
-    const singleDocs = documentTypes.some((docType) => pendingDocuments[docType.key]);
-    const miscDocs = pendingDocuments.misc && pendingDocuments.misc.length > 0;
-    return singleDocs || miscDocs;
+  const hasSelectedFiles = () => {
+    return Object.keys(selectedFiles).length > 0;
   };
 
-  const hasDocuments = () => {
+  const hasAnyDocuments = () => {
     const singleDocs = documentTypes.some((docType) => documents[docType.key]);
     const miscDocs = documents.misc && documents.misc.length > 0;
     return singleDocs || miscDocs;
   };
 
-  const handleSubmitDocuments = async () => {
-    if (!hasPendingDocuments()) {
-      alert('Please add at least one document before submitting.');
-      return;
-    }
-
-    if (!user.id) {
-      alert('User not loaded yet. Please try again.');
-      return;
-    }
-
-    setSubmitting(true);
-    let successCount = 0;
-    let totalCount = 0;
-
-    try {
-      // Upload all pending documents
-      for (const docType of documentTypes) {
-        const pendingDoc = pendingDocuments[docType.key];
-        if (pendingDoc) {
-          totalCount++;
-          try {
-            const formData = new FormData();
-            formData.append('userId', user.id.toString());
-            formData.append('docType', docType.key);
-            formData.append('file', pendingDoc.file);
-
-            const res = await axios.post(
-              `${process.env.NEXT_PUBLIC_SERVER}/document/`,
-              formData,
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-              }
-            );
-
-            const fileData = {
-              fileName: pendingDoc.fileName,
-              fileUrl: res.data.document.fileUrl || res.data.fileUrl,
-              uploadedAt: new Date().toISOString(),
-            };
-
-            setDocuments((prev) => ({
-              ...prev,
-              [docType.key]: fileData,
-            }));
-
-            successCount++;
-          } catch (err) {
-            console.error(`Error uploading ${docType.key}:`, err);
-          }
-        }
+  const getSelectedFilesCount = () => {
+    let count = 0;
+    for (const [key, value] of Object.entries(selectedFiles)) {
+      if (key === "misc" && Array.isArray(value)) {
+        count += value.length;
+      } else if (value) {
+        count += 1;
       }
-
-      // Upload misc documents
-      for (const miscDoc of pendingDocuments.misc || []) {
-        totalCount++;
-        try {
-          const formData = new FormData();
-          formData.append('userId', user.id.toString());
-          formData.append('docType', 'misc');
-          formData.append('file', miscDoc.file);
-
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_SERVER}/document/`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-              },
-            }
-          );
-
-          const fileData = {
-            fileName: miscDoc.fileName,
-            fileUrl: res.data.document.fileUrl || res.data.fileUrl,
-            uploadedAt: new Date().toISOString(),
-          };
-
-          setDocuments((prev) => ({
-            ...prev,
-            misc: [...(prev.misc || []), fileData],
-          }));
-
-          successCount++;
-        } catch (err) {
-          console.error('Error uploading misc document:', err);
-        }
-      }
-
-      // Clear pending documents after successful upload
-      setPendingDocuments({
-        driverLicense: null,
-        socialSecurity: null,
-        w2: null,
-        f1099: null,
-        form1040: null,
-        misc: [],
-      });
-
-      alert(`${successCount}/${totalCount} documents uploaded successfully! Admin can now view your documents.`);
-    } catch (error) {
-      console.error('Submit error:', error);
-      alert('Error submitting documents. Please try again.');
-    } finally {
-      setSubmitting(false);
     }
+    return count;
   };
 
-  return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg">
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold text-slate-900 mb-2">
-          Document Upload
-        </h3>
-        <p className="text-slate-600">Upload your tax documents securely</p>
-      </div>
+  const getTotalDocumentsCount = () => {
+    let count = 0;
+    documentTypes.forEach((docType) => {
+      if (documents[docType.key]) count++;
+    });
+    if (documents.misc) count += documents.misc.length;
+    return count;
+  };
 
+  const handleEditMode = () => {
+    setEditMode(true);
+    setSelectedFiles({});
+  };
+
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setSelectedFiles({});
+  };
+
+  const showSummaryCard = hasAnyDocuments() && !editMode;
+
+  if (initialLoading) {
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-lg">
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="ml-3 text-slate-600">Loading documents...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg">
       {loading && (
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-blue-700">Processing...</p>
+          <p className="text-blue-700 text-sm sm:text-base">Processing...</p>
         </div>
       )}
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {documentTypes.map((docType) => (
-          <div key={docType.key} className="space-y-3">
-            <h4 className="font-semibold text-slate-700 flex items-center">
-              <span className="mr-2 text-lg">{docType.icon}</span>
-              {docType.label}
-            </h4>
-
-            {documents[docType.key] ? (
-              <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-emerald-800 truncate">
-                      ✅ {documents[docType.key].fileName}
-                    </p>
-                    <p className="text-sm text-emerald-600">
-                      Uploaded: {new Date(documents[docType.key].uploadedAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => removeUploadedDocument(docType.key)}
-                    className="text-red-500 hover:text-red-700 p-1 ml-2 disabled:opacity-50"
-                    disabled={isDocumentTypeLoading(docType.key)}
-                  >
-                    {isDocumentTypeLoading(docType.key) ? (
-                      <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
+      {showSummaryCard ? (
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 p-4 sm:p-6 md:p-8">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+            <div className="flex items-center">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                <svg
+                  className="w-7 h-7 sm:w-8 sm:h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
               </div>
-            ) : pendingDocuments[docType.key] ? (
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-blue-800 truncate">
-                      📄 {pendingDocuments[docType.key].fileName}
-                    </p>
-                    <p className="text-sm text-blue-600">
-                      Ready to upload
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => removePendingDocument(docType.key)}
-                    className="text-red-500 hover:text-red-700 p-1 ml-2"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div
-                className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
-                  dragActive === docType.key
-                    ? "border-blue-400 bg-blue-50"
-                    : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"
-                } ${
-                  isDocumentTypeLoading(docType.key)
-                    ? "opacity-50 pointer-events-none"
-                    : ""
-                }`}
-                onDrop={(e) => handleDrop(e, docType.key)}
-                onDragOver={(e) => handleDragOver(e, docType.key)}
-                onDragLeave={handleDragLeave}
-              >
-                {isDocumentTypeLoading(docType.key) ? (
-                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                ) : (
-                  <svg
-                    className="w-8 h-8 text-slate-400 mx-auto mb-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                    />
-                  </svg>
-                )}
-                <p className="text-sm text-slate-600 mb-2">
-                  {isDocumentTypeLoading(docType.key)
-                    ? "Uploading..."
-                    : "Drop file here or"}
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-1">
+                  Documents Uploaded Successfully
+                </h3>
+                <p className="text-slate-600 text-sm sm:text-base">
+                  {getTotalDocumentsCount()} document(s) securely saved
                 </p>
-                {!isDocumentTypeLoading(docType.key) && (
-                  <label className="cursor-pointer">
-                    <span className="text-blue-600 hover:text-blue-700 font-medium">
-                      browse
-                    </span>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={(e) =>
-                        e.target.files[0] &&
-                        handleFileSelect(docType.key, e.target.files[0])
-                      }
-                      disabled={isDocumentTypeLoading(docType.key)}
-                    />
-                  </label>
-                )}
+              </div>
+            </div>
+            <button
+              onClick={handleEditMode}
+              className="bg-gradient-to-r from-blue-500 to-emerald-500 cursor-pointer text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors flex items-center shadow-md hover:shadow-lg"
+            >
+              <svg
+                className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+              Edit Documents
+            </button>
+          </div>
+
+          {/* Uploaded documents grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {documentTypes.map((docType) => {
+              if (!documents[docType.key]) return null;
+              return (
+                <div
+                  key={docType.key}
+                  className="bg-white rounded-lg p-4 shadow-sm border border-slate-200"
+                >
+                  <div className="flex items-center">
+                    <span className="text-2xl mr-3">{docType.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-800">
+                        {docType.label}
+                      </p>
+                      <p className="text-sm text-slate-600 truncate">
+                        {documents[docType.key].fileName}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {new Date(
+                          documents[docType.key].uploadedAt
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <svg
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              );
+            })}
+
+            {documents.misc && documents.misc.length > 0 && (
+              <div className="sm:col-span-2 bg-white rounded-lg p-4 shadow-sm border border-slate-200">
+                <div className="flex items-center mb-3">
+                  <span className="text-2xl mr-3">📁</span>
+                  <p className="font-semibold text-slate-800 text-sm sm:text-base">
+                    Miscellaneous Documents ({documents.misc.length})
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {documents.misc.map((doc, index) => (
+                    <div
+                      key={index}
+                      className="bg-slate-50 rounded p-3 flex items-center justify-between"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-700 truncate">
+                          {doc.fileName}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {new Date(doc.uploadedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <svg
+                        className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0 ml-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
-        ))}
+        </div>
+      ) : (
+        <div>
+          {/* Upload Section Header */}
+          <div className="mb-6">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
+              {hasAnyDocuments() ? "Edit Documents" : "Document Upload"}
+            </h3>
+            <p className="text-slate-600 text-sm sm:text-base">
+              Upload your tax documents securely
+            </p>
+          </div>
 
-        {/* Miscellaneous Documents */}
-        <div className="md:col-span-2 lg:col-span-3">
-          <h4 className="font-semibold text-slate-700 mb-3 flex items-center">
-            <span className="mr-2 text-lg">📁</span>
-            Miscellaneous Documents
-          </h4>
+          {/* Upload Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {documentTypes.map((docType) => (
+              <div key={docType.key} className="space-y-3">
+                <h4 className="font-semibold text-slate-700 flex items-center text-sm sm:text-base">
+                  <span className="mr-2 text-lg">{docType.icon}</span>
+                  {docType.label}
+                </h4>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            {documents.misc &&
-              documents.misc.map((doc, index) => (
-                <div
-                  key={index}
-                  className="bg-slate-50 border border-slate-200 rounded-xl p-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-800 truncate">
-                        {doc.fileName}
-                      </p>
-                      <p className="text-sm text-slate-600">
-                        {new Date(doc.uploadedAt).toLocaleDateString()}
-                      </p>
+                {/* Document upload state (uploaded, selected, empty dropzone) */}
+                {documents[docType.key] ? (
+                  <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-3 sm:p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-emerald-800 truncate text-sm sm:text-base">
+                          {documents[docType.key].fileName}
+                        </p>
+                        <p className="text-xs sm:text-sm text-emerald-600">
+                          {new Date(
+                            documents[docType.key].uploadedAt
+                          ).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => removeDocument(docType.key)}
+                        className="text-red-500 hover:text-red-700 p-1 ml-2 disabled:opacity-50"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <svg
+                            className="w-4 h-4 sm:w-5 sm:h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        )}
+                      </button>
                     </div>
-                    <button
-                      onClick={() => removeDocument("misc", index)}
-                      className="text-red-500 hover:text-red-700 p-1 ml-2 disabled:opacity-50"
-                      disabled={isDocumentTypeLoading("misc")}
-                    >
-                      {isDocumentTypeLoading("misc") ? (
-                        <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-                      ) : (
+                  </div>
+                ) : selectedFiles[docType.key] ? (
+                  <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-3 sm:p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-blue-800 truncate text-sm sm:text-base">
+                          {selectedFiles[docType.key].name}
+                        </p>
+                        <p className="text-xs sm:text-sm text-blue-600">
+                          {(selectedFiles[docType.key].size / 1024).toFixed(2)}{" "}
+                          KB • Selected
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => cancelFileSelection(docType.key)}
+                        className="text-slate-500 hover:text-slate-700 p-1 ml-2"
+                        disabled={uploadingAll}
+                      >
                         <svg
-                          className="w-5 h-5"
+                          className="w-4 h-4 sm:w-5 sm:h-5"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -504,115 +600,246 @@ export default function DocumentsSection() {
                             d="M6 18L18 6M6 6l12 12"
                           />
                         </svg>
-                      )}
-                    </button>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ) : (
+                  <div
+                    className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
+                      dragActive === docType.key
+                        ? "border-blue-400 bg-blue-50"
+                        : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"
+                    } ${uploadingAll ? "opacity-50 pointer-events-none" : ""}`}
+                    onDrop={(e) => handleDrop(e, docType.key)}
+                    onDragOver={(e) => handleDragOver(e, docType.key)}
+                    onDragLeave={handleDragLeave}
+                  >
+                    <svg
+                      className="w-7 h-7 sm:w-8 sm:h-8 text-slate-400 mx-auto mb-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                    <p className="text-xs sm:text-sm text-slate-600 mb-2">
+                      Drop file here or
+                    </p>
+                    <label className="cursor-pointer">
+                      <span className="text-blue-600 hover:text-blue-700 font-medium">
+                        browse
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={(e) =>
+                          e.target.files[0] &&
+                          handleFileSelect(docType.key, e.target.files[0])
+                        }
+                        disabled={uploadingAll}
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+            ))}
 
-            <div
-              className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
-                dragActive === "misc"
-                  ? "border-blue-400 bg-blue-50"
-                  : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"
-              } ${
-                isDocumentTypeLoading("misc")
-                  ? "opacity-50 pointer-events-none"
-                  : ""
-              }`}
-              onDrop={(e) => handleDrop(e, "misc")}
-              onDragOver={(e) => handleDragOver(e, "misc")}
-              onDragLeave={handleDragLeave}
-            >
-              {isDocumentTypeLoading("misc") ? (
-                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-              ) : (
-                <svg
-                  className="w-8 h-8 text-slate-400 mx-auto mb-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            {/* Misc Section */}
+            <div className="sm:col-span-2 lg:col-span-3">
+              <h4 className="font-semibold text-slate-700 mb-3 flex items-center text-sm sm:text-base">
+                <span className="mr-2 text-lg">📁</span>
+                Miscellaneous Documents
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                {documents.misc &&
+                  documents.misc.map((doc, index) => (
+                    <div
+                      key={index}
+                      className="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-800 truncate text-sm sm:text-base">
+                            {doc.fileName}
+                          </p>
+                          <p className="text-xs sm:text-sm text-slate-600">
+                            {new Date(doc.uploadedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removeDocument("misc", index)}
+                          className="text-red-500 hover:text-red-700 p-1 ml-2 disabled:opacity-50"
+                          disabled={loading}
+                        >
+                          {loading ? (
+                            <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                {selectedFiles.misc &&
+                  selectedFiles.misc.map((file, index) => (
+                    <div
+                      key={`selected-${index}`}
+                      className="bg-blue-50 border-2 border-blue-200 rounded-xl p-3 sm:p-4"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-blue-800 truncate text-sm sm:text-base">
+                            {file.name}
+                          </p>
+                          <p className="text-xs sm:text-sm text-blue-600">
+                            {(file.size / 1024).toFixed(2)} KB • Selected
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => cancelFileSelection("misc", index)}
+                          className="text-slate-500 hover:text-slate-700 p-1 ml-2"
+                          disabled={uploadingAll}
+                        >
+                          <svg
+                            className="w-4 h-4 sm:w-5 sm:h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                {/* Dropzone */}
+                <div
+                  className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
+                    dragActive === "misc"
+                      ? "border-blue-400 bg-blue-50"
+                      : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"
+                  } ${uploadingAll ? "opacity-50 pointer-events-none" : ""}`}
+                  onDrop={(e) => handleDrop(e, "misc")}
+                  onDragOver={(e) => handleDragOver(e, "misc")}
+                  onDragLeave={handleDragLeave}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-              )}
-              <p className="text-sm text-slate-600 mb-2">
-                {isDocumentTypeLoading("misc")
-                  ? "Uploading..."
-                  : "Add more documents"}
-              </p>
-              {!isDocumentTypeLoading("misc") && (
-                <label className="cursor-pointer">
-                  <span className="text-blue-600 hover:text-blue-700 font-medium">
-                    Upload
-                  </span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) => {
-                      if (e.target.files[0]) {
-                        handleFileSelect("misc", e.target.files[0]);
+                  <svg
+                    className="w-7 h-7 sm:w-8 sm:h-8 text-slate-400 mx-auto mb-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  <p className="text-xs sm:text-sm text-slate-600 mb-2">
+                    Add more documents
+                  </p>
+                  <label className="cursor-pointer">
+                    <span className="text-blue-600 hover:text-blue-700 font-medium">
+                      Upload
+                    </span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) =>
+                        e.target.files[0] &&
+                        handleFileSelect("misc", e.target.files[0])
                       }
-                    }}
-                    disabled={isDocumentTypeLoading("misc")}
-                  />
-                </label>
-              )}
+                      disabled={uploadingAll}
+                    />
+                  </label>
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* Footer buttons */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            {hasSelectedFiles() && (
+              <div className="flex-1 p-3 sm:p-4 bg-blue-50 border-2 border-blue-300 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-blue-900 text-sm sm:text-base">
+                    Ready to Upload
+                  </p>
+                  <p className="text-xs sm:text-sm text-blue-700">
+                    {getSelectedFilesCount()} document(s) selected
+                  </p>
+                </div>
+                <button
+                  onClick={handleUploadAll}
+                  disabled={uploadingAll}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 sm:py-3 sm:px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md hover:shadow-lg"
+                >
+                  {uploadingAll ? (
+                    <>
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                        />
+                      </svg>
+                      Upload All Documents
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {hasAnyDocuments() && (
+              <button
+                onClick={handleCancelEdit}
+                className="bg-slate-500 hover:bg-slate-600 text-white font-medium py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* Status Messages and Submit Button */}
-      <div className="mt-6 space-y-4">
-        {hasDocuments() && (
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-700 text-sm">
-              ✅ Documents uploaded successfully and visible to admin.
-            </p>
-          </div>
-        )}
-        
-        {hasPendingDocuments() && (
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-blue-700 text-sm">
-                📄 Documents ready to upload. Click submit to upload to Cloudinary and make visible to admin.
-              </p>
-            </div>
-            <div className="text-center">
-              <button
-                onClick={handleSubmitDocuments}
-                disabled={submitting}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 text-white font-semibold rounded-xl transition-all transform hover:scale-105 flex items-center justify-center mx-auto"
-              >
-                {submitting ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    📤 Submit Documents to Admin
-                  </>
-                )}
-              </button>
-              <p className="text-sm text-slate-600 mt-2">
-                Upload to Cloudinary and make visible to admin dashboard
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }

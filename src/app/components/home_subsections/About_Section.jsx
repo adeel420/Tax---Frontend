@@ -37,6 +37,7 @@ export default function About_Section() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left - Owner Image */}
           <div
+
             className={`relative transition-all duration-1000 lg:-ml-40 ${isVisible
               ? "opacity-100 translate-x-0"
               : "opacity-0 -translate-x-10"
@@ -110,10 +111,11 @@ export default function About_Section() {
 
           {/* Right - Content */}
           <div
-            className={`space-y-8 transition-all duration-1000 delay-300 ${isVisible
-              ? "opacity-100 translate-x-0"
-              : "opacity-0 translate-x-10"
-              }`}
+            className={`space-y-8 transition-all duration-1000 delay-300 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-10"
+            }`}
           >
             <div className="space-y-6">
               <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-100 border border-blue-300 rounded-full text-blue-700 text-xs sm:text-sm font-medium">

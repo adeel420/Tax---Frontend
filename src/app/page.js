@@ -8,6 +8,7 @@ import ServicesSection from "./components/home_subsections/Services_Section";
 import Testimonial_Section from "./components/home_subsections/Testimonal_Section";
 import FAQSection from "./components/home_subsections/FAQ_Section";
 import Newsletter from "./components/home_subsections/Newsletter";
+import IRS_News_Section from "./components/home_subsections/IRS_News_Section";
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,6 +24,7 @@ export default function Home() {
       <ServicesSection />
       <Testimonial_Section />
       <FAQSection />
+      <IRS_News_Section />
       <Newsletter />
     </div>
   );

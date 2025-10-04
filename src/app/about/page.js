@@ -13,8 +13,10 @@ export default function Page() {
 
   const stats = [
     { number: "5+", label: "Years Experience" },
+
     { number: "7K+", label: "Happy Clients" },
     { number: "$10M+", label: "Refunds Secured" },
+
     { number: "98%", label: "Success Rate" },
   ];
 
