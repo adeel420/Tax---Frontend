@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 
 export default function AppointmentManagement() {
   const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [meetingLinkModal, setMeetingLinkModal] = useState({ show: false, appointment: null });
   const [meetingLink, setMeetingLink] = useState('');
 
@@ -28,9 +30,25 @@ export default function AppointmentManagement() {
       const data = await response.json();
       if (data.success) {
         setAppointments(data.appointments);
+        setFilteredAppointments(data.appointments);
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);
+    }
+  };
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    if (!term) {
+      setFilteredAppointments(appointments);
+    } else {
+      const filtered = appointments.filter(appointment =>
+        appointment.name.toLowerCase().includes(term.toLowerCase()) ||
+        appointment.email.toLowerCase().includes(term.toLowerCase()) ||
+        appointment.service.toLowerCase().includes(term.toLowerCase()) ||
+        appointment.status.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredAppointments(filtered);
     }
   };
 
@@ -82,18 +100,47 @@ export default function AppointmentManagement() {
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h2 className="text-2xl font-bold text-slate-800">Appointment Management</h2>
-        <button
-          onClick={fetchAppointments}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-        >
-          Refresh
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search appointments..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full sm:w-64 pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-900 placeholder-slate-500"
+            />
+            <svg
+              className="absolute left-3 top-2.5 w-5 h-5 text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <button
+            onClick={fetchAppointments}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
       </div>
 
       <div className="space-y-4">
-        {appointments.map((appointment) => (
+        {filteredAppointments.length === 0 ? (
+          <div className="text-center py-8 text-slate-500">
+            {searchTerm ? `No appointments found for "${searchTerm}"` : 'No appointments found'}
+          </div>
+        ) : (
+          filteredAppointments.map((appointment) => (
           <div key={appointment._id} className="border rounded-xl p-6 hover:shadow-md transition-shadow">
             <div className="grid md:grid-cols-4 gap-4">
               <div>
@@ -139,7 +186,8 @@ export default function AppointmentManagement() {
               </div>
             </div>
           </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Meeting Link Modal */}

@@ -27,7 +27,7 @@ export default function BookingPage() {
     "Financial Statements",
     "Bookkeeping",
     "Payroll & Payroll Tax Preparation",
-    "Specialized in individual and Business Tax Returns",
+    "Business Tax",
   ];
 
   const fetchAvailableSlots = async (date) => {
@@ -107,12 +107,12 @@ export default function BookingPage() {
     const now = new Date();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Disable Sundays (0 = Sunday)
     if (date.getDay() === 0) {
       return true;
     }
-    
+
     // If it's today and after business hours
     if (date.toDateString() === now.toDateString()) {
       const dayOfWeek = now.getDay();
@@ -123,7 +123,7 @@ export default function BookingPage() {
         return true; // Saturday after 3 PM
       }
     }
-    
+
     return date < today;
   };
 
@@ -285,7 +285,7 @@ export default function BookingPage() {
           {/* Booking Form */}
           <div className="bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
                   placeholder="Full Name"
@@ -304,7 +304,7 @@ export default function BookingPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="tel"
                   placeholder="Phone"
