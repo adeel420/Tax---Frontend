@@ -57,7 +57,7 @@ export default function Page() {
 
   const handleLogout = () => {
     logout();
-    toast.success("User Dashboard Logout");
+    toast.success("Logged out successfully");
     router.push("/");
   };
 
@@ -111,8 +111,11 @@ export default function Page() {
             <button
               key={item.id}
               onClick={() => {
-                setActiveTab(item.id);
-                if (item.id === "logout") handleLogout();
+                if (item.id === "logout") {
+                  handleLogout();
+                } else {
+                  setActiveTab(item.id);
+                }
                 if (window.innerWidth < 1024) setSidebarOpen(false); // auto-close on mobile
               }}
               className={`w-full flex items-center px-4 cursor-pointer py-3 mb-2 rounded-xl transition-all duration-300 ${activeTab === item.id
