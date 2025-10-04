@@ -8,7 +8,7 @@ export default function DocumentViewSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all"); // all, complete, incomplete
+  const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
@@ -20,11 +20,11 @@ export default function DocumentViewSection() {
     { key: "form1040", label: "1040", icon: "📊" },
   ];
 
-  // Fetch all users' documents
   const fetchAllDocuments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token =
+        sessionStorage.getItem("token") || localStorage.getItem("token");
       if (!token) {
         setError("No authentication token found");
         return;
@@ -56,7 +56,6 @@ export default function DocumentViewSection() {
     fetchAllDocuments();
   }, []);
 
-  // Calculate completion percentage for a user
   const getCompletionPercentage = (userDoc) => {
     const uploadedCount = documentTypes.filter(
       (docType) => userDoc[docType.key]
@@ -64,7 +63,6 @@ export default function DocumentViewSection() {
     return Math.round((uploadedCount / documentTypes.length) * 100);
   };
 
-  // Get total documents for a user
   const getTotalDocuments = (userDoc) => {
     const requiredDocsCount = documentTypes.filter(
       (docType) => userDoc[docType.key]
@@ -73,7 +71,6 @@ export default function DocumentViewSection() {
     return requiredDocsCount + miscDocsCount;
   };
 
-  // Filter users based on search and status
   const filteredUsers = allUserDocuments.filter((userDoc) => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch =
@@ -91,29 +88,45 @@ export default function DocumentViewSection() {
     return matchesSearch;
   });
 
-  // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
+  // Helper function to check if file is PDF
+  const isPdfFile = (fileName) => {
+    return fileName?.toLowerCase().endsWith(".pdf");
+  };
+
   const handleView = (fileUrl, fileName) => {
+    if (!fileUrl) {
+      alert("File URL is not available");
+      return;
+    }
+
+    console.log("=== VIEW DEBUG ===");
+    console.log("URL:", fileUrl);
+    console.log("Filename:", fileName);
+
     window.open(fileUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleDownload = (fileUrl, fileName) => {
-    // If Cloudinary URL, force download using fl_attachment
-    let downloadUrl = fileUrl;
-    if (downloadUrl.includes("res.cloudinary.com")) {
-      downloadUrl = downloadUrl.replace("/upload/", "/upload/fl_attachment/");
+    if (!fileUrl) {
+      alert("File URL is not available");
+      return;
     }
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.setAttribute("download", fileName || "document");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    console.log("=== DOWNLOAD DEBUG ===");
+    console.log("URL:", fileUrl);
+    console.log("Filename:", fileName);
+
+    if (fileUrl.includes("res.cloudinary.com")) {
+      const downloadUrl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
+      window.open(downloadUrl, "_blank");
+    } else {
+      window.open(fileUrl, "_blank");
+    }
   };
 
   const formatDate = (dateString) => {
@@ -158,17 +171,21 @@ export default function DocumentViewSection() {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg">
+    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h3 className="text-2xl font-bold text-slate-900">Users Documents</h3>
-          <p className="text-slate-600">Admin view of all user documents</p>
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
+            Users Documents
+          </h3>
+          <p className="text-slate-600 text-sm sm:text-base">
+            Admin view of all user documents
+          </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center">
           <button
             onClick={fetchAllDocuments}
-            className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-1"
+            className="px-3 py-2 sm:px-4 sm:py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-1"
           >
             <svg
               className="w-4 h-4"
@@ -196,13 +213,13 @@ export default function DocumentViewSection() {
             placeholder="Search by User ID, Name, or Email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border border-slate-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-slate-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
           />
         </div>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2 border border-slate-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="px-4 py-2 border border-slate-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
         >
           <option value="all">All Users</option>
           <option value="complete">Complete (100%)</option>
@@ -211,15 +228,15 @@ export default function DocumentViewSection() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-blue-50 p-4 rounded-xl border border-blue-200">
-          <div className="text-2xl font-bold text-blue-800">
+          <div className="text-xl sm:text-2xl font-bold text-blue-800">
             {allUserDocuments.length}
           </div>
           <div className="text-sm text-blue-600">Total Users</div>
         </div>
         <div className="bg-green-50 p-4 rounded-xl border border-green-200">
-          <div className="text-2xl font-bold text-green-800">
+          <div className="text-xl sm:text-2xl font-bold text-green-800">
             {
               allUserDocuments.filter(
                 (user) => getCompletionPercentage(user) === 100
@@ -229,7 +246,7 @@ export default function DocumentViewSection() {
           <div className="text-sm text-green-600">Complete</div>
         </div>
         <div className="bg-amber-50 p-4 rounded-xl border border-amber-200">
-          <div className="text-2xl font-bold text-amber-800">
+          <div className="text-xl sm:text-2xl font-bold text-amber-800">
             {
               allUserDocuments.filter(
                 (user) =>
@@ -241,7 +258,7 @@ export default function DocumentViewSection() {
           <div className="text-sm text-amber-600">In Progress</div>
         </div>
         <div className="bg-red-50 p-4 rounded-xl border border-red-200">
-          <div className="text-2xl font-bold text-red-800">
+          <div className="text-xl sm:text-2xl font-bold text-red-800">
             {
               allUserDocuments.filter(
                 (user) => getCompletionPercentage(user) === 0
@@ -256,13 +273,13 @@ export default function DocumentViewSection() {
       <div className="space-y-4">
         {currentUsers.length === 0 ? (
           <div className="text-center py-8">
-            <div className="text-6xl mb-4">📋</div>
-            <h4 className="text-lg font-semibold text-slate-800 mb-2">
+            <div className="text-5xl sm:text-6xl mb-4">📋</div>
+            <h4 className="text-base sm:text-lg font-semibold text-slate-800 mb-2">
               {searchTerm || filterStatus !== "all"
                 ? "No matching users found"
                 : "No users have uploaded documents yet"}
             </h4>
-            <p className="text-slate-600">
+            <p className="text-slate-600 text-sm sm:text-base">
               {searchTerm || filterStatus !== "all"
                 ? "Try adjusting your search or filters."
                 : "Documents will appear here once users start uploading."}
@@ -272,25 +289,25 @@ export default function DocumentViewSection() {
           currentUsers.map((userDoc) => (
             <div
               key={userDoc.userId}
-              className="border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+              className="border border-slate-200 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow"
             >
               {/* User Header */}
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-blue-800 font-medium text-sm">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-blue-800 font-medium text-sm sm:text-base">
                       {userDoc.userName && userDoc.userName !== "N/A"
                         ? userDoc.userName.slice(0, 2).toUpperCase()
                         : userDoc.userId.slice(0, 2).toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900">
+                    <h4 className="font-semibold text-slate-900 text-sm sm:text-base">
                       {userDoc.userName && userDoc.userName !== "N/A"
                         ? userDoc.userName
                         : `User ${userDoc.userId}`}
                     </h4>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-xs sm:text-sm text-slate-600">
                       {userDoc.userEmail}
                     </p>
                     <p className="text-xs text-slate-500">
@@ -299,11 +316,13 @@ export default function DocumentViewSection() {
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-xl font-bold text-slate-800">
+                <div className="text-left sm:text-right">
+                  <div className="text-lg sm:text-xl font-bold text-slate-800">
                     {getCompletionPercentage(userDoc)}%
                   </div>
-                  <div className="text-sm text-slate-600">Complete</div>
+                  <div className="text-xs sm:text-sm text-slate-600">
+                    Complete
+                  </div>
                 </div>
               </div>
 
@@ -311,31 +330,31 @@ export default function DocumentViewSection() {
               <div className="mb-4">
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      getCompletionPercentage(userDoc) === 100
+                    className={`h-2 rounded-full transition-all duration-300 ${getCompletionPercentage(userDoc) === 100
                         ? "bg-green-500"
                         : getCompletionPercentage(userDoc) > 0
-                        ? "bg-amber-500"
-                        : "bg-red-500"
-                    }`}
+                          ? "bg-amber-500"
+                          : "bg-red-500"
+                      }`}
                     style={{ width: `${getCompletionPercentage(userDoc)}%` }}
                   ></div>
                 </div>
               </div>
 
               {/* Documents Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-4">
                 {documentTypes.map((docType) => (
                   <div key={docType.key} className="text-center">
                     <div
-                      className={`p-3 rounded-lg border-2 ${
-                        userDoc[docType.key]
+                      className={`p-3 rounded-lg border-2 ${userDoc[docType.key]
                           ? "bg-green-50 border-green-200"
                           : "bg-slate-50 border-slate-200"
-                      }`}
+                        }`}
                     >
-                      <div className="text-2xl mb-1">{docType.icon}</div>
-                      <div className="text-xs font-medium text-slate-700">
+                      <div className="text-lg sm:text-2xl mb-1">
+                        {docType.icon}
+                      </div>
+                      <div className="text-xs sm:text-sm font-medium text-slate-700">
                         {docType.label}
                       </div>
                       {userDoc[docType.key] ? (
@@ -347,17 +366,22 @@ export default function DocumentViewSection() {
                             {userDoc[docType.key].fileName}
                           </div>
                           <div className="flex gap-1">
-                            <button
-                              onClick={() =>
-                                handleView(
-                                  userDoc[docType.key].fileUrl,
-                                  userDoc[docType.key].fileName
-                                )
-                              }
-                              className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 cursor-pointer"
-                            >
-                              View
-                            </button>
+                            {/* View button - only show for non-PDF files */}
+                            {!isPdfFile(userDoc[docType.key].fileName) && (
+                              <button
+                                onClick={() =>
+                                  handleView(
+                                    userDoc[docType.key].fileUrl,
+                                    userDoc[docType.key].fileName
+                                  )
+                                }
+                                className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 cursor-pointer"
+                              >
+                                View
+                              </button>
+                            )}
+
+                            {/* Download button - always show */}
                             <button
                               onClick={() =>
                                 handleDownload(
@@ -367,7 +391,9 @@ export default function DocumentViewSection() {
                               }
                               className="flex-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 cursor-pointer"
                             >
-                              ↓
+                              {isPdfFile(userDoc[docType.key].fileName)
+                                ? "Download"
+                                : "↓"}
                             </button>
                           </div>
                         </div>
@@ -387,7 +413,7 @@ export default function DocumentViewSection() {
                   <h5 className="text-sm font-medium text-slate-700 mb-2">
                     📁 Miscellaneous Documents ({userDoc.misc.length})
                   </h5>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                     {userDoc.misc.map((doc, index) => (
                       <div
                         key={index}
@@ -395,7 +421,7 @@ export default function DocumentViewSection() {
                       >
                         <div className="flex-1 min-w-0">
                           <p
-                            className="text-xs font-medium text-slate-800 truncate"
+                            className="text-xs sm:text-sm font-medium text-slate-800 truncate"
                             title={doc.fileName}
                           >
                             {doc.fileName}
@@ -405,21 +431,26 @@ export default function DocumentViewSection() {
                           </p>
                         </div>
                         <div className="flex gap-1 ml-2">
-                          <button
-                            onClick={() =>
-                              handleView(doc.fileUrl, doc.fileName)
-                            }
-                            className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-                          >
-                            View
-                          </button>
+                          {/* View button - only for non-PDF */}
+                          {!isPdfFile(doc.fileName) && (
+                            <button
+                              onClick={() =>
+                                handleView(doc.fileUrl, doc.fileName)
+                              }
+                              className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                            >
+                              View
+                            </button>
+                          )}
+
+                          {/* Download button - always show */}
                           <button
                             onClick={() =>
                               handleDownload(doc.fileUrl, doc.fileName)
                             }
                             className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200"
                           >
-                            ↓
+                            {isPdfFile(doc.fileName) ? "Download" : "↓"}
                           </button>
                         </div>
                       </div>
@@ -434,7 +465,7 @@ export default function DocumentViewSection() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-6">
+        <div className="flex flex-wrap justify-center items-center gap-2 mt-6">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -443,16 +474,15 @@ export default function DocumentViewSection() {
             Previous
           </button>
 
-          <div className="flex gap-1">
+          <div className="flex flex-wrap gap-1">
             {[...Array(totalPages)].map((_, index) => (
               <button
                 key={index + 1}
                 onClick={() => setCurrentPage(index + 1)}
-                className={`px-3 py-1 text-sm rounded ${
-                  currentPage === index + 1
+                className={`px-3 py-1 text-sm rounded ${currentPage === index + 1
                     ? "bg-blue-600 text-white"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
+                  }`}
               >
                 {index + 1}
               </button>

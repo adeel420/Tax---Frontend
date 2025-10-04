@@ -15,7 +15,7 @@ export default function Page() {
       title: "Individual Tax Preparation",
       description:
         "Complete personal tax preparation with maximum deduction identification",
-      price: "$99",
+      price: "$150",
       features: [
         "Form 1040 & Schedules",
         "Itemized Deductions",
@@ -44,7 +44,7 @@ export default function Page() {
     {
       title: "Business Tax Services",
       description: "Comprehensive business tax solutions for all entity types",
-      price: "$299",
+      price: "$399",
       features: [
         "All Business Forms",
         "Quarterly Filings",
@@ -74,7 +74,7 @@ export default function Page() {
       title: "Tax Planning & Strategy",
       description:
         "Year-round strategic tax planning to minimize your tax burden",
-      price: "$199",
+      price: "$250",
       features: [
         "Tax Strategy Development",
         "Quarterly Reviews",
@@ -363,14 +363,14 @@ export default function Page() {
                     ))}
                   </ul>
 
-                  <button
-                    className={`w-full py-3 sm:py-4 font-semibold rounded-xl sm:rounded-2xl transition-all duration-300 transform group-hover:scale-105 text-sm sm:text-base ${service.popular
+                  <Link href="/contact">    <button
+                    className={`cursor-pointer w-full py-3 sm:py-4 font-semibold rounded-xl sm:rounded-2xl transition-all duration-300 transform group-hover:scale-105 text-sm sm:text-base ${service.popular
                       ? "bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white shadow-lg"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-900"
                       }`}
                   >
                     Get Started
-                  </button>
+                  </button></Link>
                 </div>
               </div>
             ))}
@@ -464,8 +464,8 @@ export default function Page() {
                 Free Consultation
               </button>
               </Link>
-              <Link href="tell:123466789">  <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-semibold rounded-lg sm:rounded-xl hover:bg-white/10 transition-all duration-300 text-sm sm:text-base">
-                Call (555) 123-4567
+              <Link href="tell:(630) 394-4147">  <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-semibold rounded-lg sm:rounded-xl hover:bg-white/10 transition-all duration-300 text-sm sm:text-base">
+                Call (630) 394-4147
               </button>
               </Link>
             </div>

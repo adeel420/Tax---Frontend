@@ -13,10 +13,20 @@ export default function DocumentsSection() {
     misc: [],
   });
 
+  const [pendingDocuments, setPendingDocuments] = useState({
+    driverLicense: null,
+    socialSecurity: null,
+    w2: null,
+    f1099: null,
+    form1040: null,
+    misc: [],
+  });
+
   const [dragActive, setDragActive] = useState("");
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
   const [loadingStates, setLoadingStates] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const documentTypes = [
     { key: "driverLicense", label: "Driver License", icon: "🆔" },
@@ -84,12 +94,7 @@ export default function DocumentsSection() {
     handleGetLogin();
   }, []);
 
-  const handleFileUpload = async (type, file) => {
-    if (!user.id) {
-      alert("User not loaded yet. Please try again.");
-      return;
-    }
-
+  const handleFileSelect = (type, file) => {
     // Validate file size (10MB limit)
     if (file.size > 10 * 1024 * 1024) {
       alert("File size must be less than 10MB");
@@ -108,69 +113,36 @@ export default function DocumentsSection() {
       return;
     }
 
-    // Set loading state for specific document type
-    setLoadingStates((prev) => ({ ...prev, [type]: true }));
+    // Store file locally without uploading
+    const fileData = {
+      fileName: file.name,
+      file: file,
+      addedAt: new Date().toISOString(),
+    };
 
-    const formData = new FormData();
-    formData.append("userId", user.id.toString());
-    formData.append("docType", type);
-    formData.append("file", file);
-
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER}/document/`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            // Don't set Content-Type - let axios set it with boundary
-          },
-        }
-      );
-
-      const data = res.data;
-
-      // Create file data object
-      const fileData = {
-        fileName: file.name,
-        fileUrl: data.document.fileUrl || data.fileUrl,
-        uploadedAt: new Date().toISOString(),
-      };
-
-      // Update local state based on document type
-      if (type === "misc") {
-        setDocuments((prev) => ({
-          ...prev,
-          misc: [...(prev.misc || []), fileData],
-        }));
-      } else {
-        setDocuments((prev) => ({
-          ...prev,
-          [type]: fileData,
-        }));
-      }
-
-      alert(
-        `${
-          documentTypes.find((doc) => doc.key === type)?.label || "Document"
-        } uploaded successfully!`
-      );
-    } catch (err) {
-      console.error("Upload error:", err.response?.data || err.message);
-      const errorMessage =
-        err.response?.data?.message ||
-        "Failed to upload file. Please try again.";
-      alert(errorMessage);
-    } finally {
-      setLoadingStates((prev) => ({ ...prev, [type]: false }));
+    // Update pending documents state
+    if (type === "misc") {
+      setPendingDocuments((prev) => ({
+        ...prev,
+        misc: [...(prev.misc || []), fileData],
+      }));
+    } else {
+      setPendingDocuments((prev) => ({
+        ...prev,
+        [type]: fileData,
+      }));
     }
+
+    alert(
+      `${documentTypes.find((doc) => doc.key === type)?.label || "Document"} added! Click 'Submit Documents' to upload.`
+    );
   };
 
   const handleDrop = (e, type) => {
     e.preventDefault();
     setDragActive("");
     const files = Array.from(e.dataTransfer.files);
-    if (files[0]) handleFileUpload(type, files[0]);
+    if (files[0]) handleFileSelect(type, files[0]);
   };
 
   const handleDragOver = (e, type) => {
@@ -182,13 +154,25 @@ export default function DocumentsSection() {
     setDragActive("");
   };
 
-  const removeDocument = async (type, index = null) => {
+  const removePendingDocument = (type, index = null) => {
+    if (type === "misc" && index !== null) {
+      setPendingDocuments((prev) => ({
+        ...prev,
+        misc: prev.misc.filter((_, i) => i !== index),
+      }));
+    } else {
+      setPendingDocuments((prev) => ({
+        ...prev,
+        [type]: null,
+      }));
+    }
+  };
+
+  const removeUploadedDocument = async (type, index = null) => {
     try {
       setLoadingStates((prev) => ({ ...prev, [type]: true }));
-
       const token = localStorage.getItem("token");
 
-      // Call backend to remove document
       await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER}/document/${user.id}/${type}${
           index !== null ? `/${index}` : ""
@@ -200,7 +184,6 @@ export default function DocumentsSection() {
         }
       );
 
-      // Update local state
       if (type === "misc" && index !== null) {
         setDocuments((prev) => ({
           ...prev,
@@ -226,10 +209,126 @@ export default function DocumentsSection() {
     return loadingStates[type] || loading;
   };
 
+  const hasPendingDocuments = () => {
+    const singleDocs = documentTypes.some((docType) => pendingDocuments[docType.key]);
+    const miscDocs = pendingDocuments.misc && pendingDocuments.misc.length > 0;
+    return singleDocs || miscDocs;
+  };
+
   const hasDocuments = () => {
     const singleDocs = documentTypes.some((docType) => documents[docType.key]);
     const miscDocs = documents.misc && documents.misc.length > 0;
     return singleDocs || miscDocs;
+  };
+
+  const handleSubmitDocuments = async () => {
+    if (!hasPendingDocuments()) {
+      alert('Please add at least one document before submitting.');
+      return;
+    }
+
+    if (!user.id) {
+      alert('User not loaded yet. Please try again.');
+      return;
+    }
+
+    setSubmitting(true);
+    let successCount = 0;
+    let totalCount = 0;
+
+    try {
+      // Upload all pending documents
+      for (const docType of documentTypes) {
+        const pendingDoc = pendingDocuments[docType.key];
+        if (pendingDoc) {
+          totalCount++;
+          try {
+            const formData = new FormData();
+            formData.append('userId', user.id.toString());
+            formData.append('docType', docType.key);
+            formData.append('file', pendingDoc.file);
+
+            const res = await axios.post(
+              `${process.env.NEXT_PUBLIC_SERVER}/document/`,
+              formData,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+              }
+            );
+
+            const fileData = {
+              fileName: pendingDoc.fileName,
+              fileUrl: res.data.document.fileUrl || res.data.fileUrl,
+              uploadedAt: new Date().toISOString(),
+            };
+
+            setDocuments((prev) => ({
+              ...prev,
+              [docType.key]: fileData,
+            }));
+
+            successCount++;
+          } catch (err) {
+            console.error(`Error uploading ${docType.key}:`, err);
+          }
+        }
+      }
+
+      // Upload misc documents
+      for (const miscDoc of pendingDocuments.misc || []) {
+        totalCount++;
+        try {
+          const formData = new FormData();
+          formData.append('userId', user.id.toString());
+          formData.append('docType', 'misc');
+          formData.append('file', miscDoc.file);
+
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_SERVER}/document/`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+            }
+          );
+
+          const fileData = {
+            fileName: miscDoc.fileName,
+            fileUrl: res.data.document.fileUrl || res.data.fileUrl,
+            uploadedAt: new Date().toISOString(),
+          };
+
+          setDocuments((prev) => ({
+            ...prev,
+            misc: [...(prev.misc || []), fileData],
+          }));
+
+          successCount++;
+        } catch (err) {
+          console.error('Error uploading misc document:', err);
+        }
+      }
+
+      // Clear pending documents after successful upload
+      setPendingDocuments({
+        driverLicense: null,
+        socialSecurity: null,
+        w2: null,
+        f1099: null,
+        form1040: null,
+        misc: [],
+      });
+
+      alert(`${successCount}/${totalCount} documents uploaded successfully! Admin can now view your documents.`);
+    } catch (error) {
+      console.error('Submit error:', error);
+      alert('Error submitting documents. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -260,36 +359,45 @@ export default function DocumentsSection() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-emerald-800 truncate">
-                      {documents[docType.key].fileName}
+                      ✅ {documents[docType.key].fileName}
                     </p>
                     <p className="text-sm text-emerald-600">
-                      {new Date(
-                        documents[docType.key].uploadedAt
-                      ).toLocaleDateString()}
+                      Uploaded: {new Date(documents[docType.key].uploadedAt).toLocaleDateString()}
                     </p>
                   </div>
                   <button
-                    onClick={() => removeDocument(docType.key)}
+                    onClick={() => removeUploadedDocument(docType.key)}
                     className="text-red-500 hover:text-red-700 p-1 ml-2 disabled:opacity-50"
                     disabled={isDocumentTypeLoading(docType.key)}
                   >
                     {isDocumentTypeLoading(docType.key) ? (
                       <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                     ) : (
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     )}
+                  </button>
+                </div>
+              </div>
+            ) : pendingDocuments[docType.key] ? (
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-blue-800 truncate">
+                      📄 {pendingDocuments[docType.key].fileName}
+                    </p>
+                    <p className="text-sm text-blue-600">
+                      Ready to upload
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => removePendingDocument(docType.key)}
+                    className="text-red-500 hover:text-red-700 p-1 ml-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -341,7 +449,7 @@ export default function DocumentsSection() {
                       accept=".pdf,.jpg,.jpeg,.png"
                       onChange={(e) =>
                         e.target.files[0] &&
-                        handleFileUpload(docType.key, e.target.files[0])
+                        handleFileSelect(docType.key, e.target.files[0])
                       }
                       disabled={isDocumentTypeLoading(docType.key)}
                     />
@@ -447,10 +555,11 @@ export default function DocumentsSection() {
                     type="file"
                     className="hidden"
                     accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) =>
-                      e.target.files[0] &&
-                      handleFileUpload("misc", e.target.files[0])
-                    }
+                    onChange={(e) => {
+                      if (e.target.files[0]) {
+                        handleFileSelect("misc", e.target.files[0]);
+                      }
+                    }}
                     disabled={isDocumentTypeLoading("misc")}
                   />
                 </label>
@@ -460,14 +569,50 @@ export default function DocumentsSection() {
         </div>
       </div>
 
-      {/* Status Message */}
-      {hasDocuments() && (
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-700 text-sm">
-            ✅ Documents uploaded successfully. They are automatically saved.
-          </p>
-        </div>
-      )}
+      {/* Status Messages and Submit Button */}
+      <div className="mt-6 space-y-4">
+        {hasDocuments() && (
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-700 text-sm">
+              ✅ Documents uploaded successfully and visible to admin.
+            </p>
+          </div>
+        )}
+        
+        {hasPendingDocuments() && (
+          <div className="space-y-4">
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-blue-700 text-sm">
+                📄 Documents ready to upload. Click submit to upload to Cloudinary and make visible to admin.
+              </p>
+            </div>
+            <div className="text-center">
+              <button
+                onClick={handleSubmitDocuments}
+                disabled={submitting}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 text-white font-semibold rounded-xl transition-all transform hover:scale-105 flex items-center justify-center mx-auto"
+              >
+                {submitting ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    📤 Submit Documents to Admin
+                  </>
+                )}
+              </button>
+              <p className="text-sm text-slate-600 mt-2">
+                Upload to Cloudinary and make visible to admin dashboard
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

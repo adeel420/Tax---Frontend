@@ -55,8 +55,9 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>
             <div className="space-y-2 text-slate-400 text-sm sm:text-base">
-              <p>(555) 123-4567</p>
+              <p>(630) 394-4147</p>
               <p>info@Eliaselitaxservices.com</p>
+              <p>Lakeville, Indiana</p>
               <div className="flex space-x-4 pt-4">
                 {["twitter", "facebook"].map((icon, i) => (
                   <a
