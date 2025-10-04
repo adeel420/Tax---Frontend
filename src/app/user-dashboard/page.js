@@ -7,6 +7,7 @@ import axios from "axios";
 import { isAuthenticated, getUserData, logout } from "../utils/auth";
 import Contact_subsection from "../components/adminDashboard_subsections/Contact_subsection";
 import DocumentsSection from "../components/userDashboard_subsections/DocumentsSection";
+import Link from "next/link";
 
 
 export default function Page() {
@@ -51,13 +52,7 @@ export default function Page() {
 
   const menuItems = [
     { id: "document", label: "Documents", icon: "📄" },
-
-    { id: "clients", label: "Clients", icon: "👥" },
-    { id: "returns", label: "Tax Returns", icon: "📄" },
-    { id: "contact", label: "Contact", icon: "📧" },
-    { id: "reports", label: "Reports", icon: "📈" },
-    { id: "settings", label: "Settings", icon: "⚙️" },
-    { id: "logout", label: "Logout", icon: "⏻" },
+    { id: "logout", label: "Logout", icon: "🚪" },
   ];
 
   const handleLogout = () => {
@@ -97,9 +92,8 @@ export default function Page() {
     <div className="min-h-screen bg-slate-50 flex">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-slate-900 to-blue-900 transform ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-slate-900 to-blue-900 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0`}
       >
         <div className="flex items-center justify-center h-16 px-4 border-b border-slate-700">
           <div className="flex items-center space-x-2">
@@ -107,7 +101,7 @@ export default function Page() {
               <span className="text-white font-bold text-sm">ETS</span>
             </div>
             <span className="text-lg md:text-xl font-bold text-white">
-              Eliaselitaxservices
+              <Link href="/"> Eliaselitaxservices</Link>
             </span>
           </div>
         </div>
@@ -121,13 +115,18 @@ export default function Page() {
                 if (item.id === "logout") handleLogout();
                 if (window.innerWidth < 1024) setSidebarOpen(false); // auto-close on mobile
               }}
-              className={`w-full flex items-center px-4 cursor-pointer py-3 mb-2 rounded-xl transition-all duration-300 ${
-                activeTab === item.id
-                  ? "bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg"
-                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
-              }`}
+              className={`w-full flex items-center px-4 cursor-pointer py-3 mb-2 rounded-xl transition-all duration-300 ${activeTab === item.id
+                ? "bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                }`}
             >
-              <span className="mr-3 text-lg">{item.icon}</span>
+              {item.id === "logout" ? (
+                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              ) : (
+                <span className="mr-3 text-lg">{item.icon}</span>
+              )}
               <span className="font-medium">{item.label}</span>
             </button>
           ))}
@@ -163,112 +162,13 @@ export default function Page() {
               </h1>
             </div>
 
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* Search */}
-              <div className="relative hidden sm:block">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-32 md:w-48 lg:w-64 pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <svg
-                  className="absolute left-3 top-2.5 w-5 h-5 text-slate-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
 
-              {/* User Avatar */}
-              <div className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
-                {user?.name
-                  ? user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                  : ""}
-              </div>
-            </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
         <main className="p-4 md:p-6">
           {activeTab === "document" && <DocumentsSection />}
-
-
-
-          {/* Other Tabs */}
-          {activeTab === "clients" && (
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 sm:gap-0">
-                <h3 className="text-lg md:text-xl font-bold text-slate-900">
-                  Client Management
-                </h3>
-                <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 text-sm md:text-base">
-                  Add Client
-                </button>
-              </div>
-              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600 text-sm md:text-base">
-                  Client management interface
-                </p>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "returns" && (
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
-                Tax Returns
-              </h3>
-              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600 text-sm md:text-base">
-                  Tax returns management interface
-                </p>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "contact" && (
-            <div className="overflow-x-auto">
-              <Contact_subsection />
-            </div>
-          )}
-
-          {activeTab === "reports" && (
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
-                Reports
-              </h3>
-              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600 text-sm md:text-base">
-                  Reports interface
-                </p>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "settings" && (
-            <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg">
-              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 md:mb-6">
-                Settings
-              </h3>
-              <div className="h-64 md:h-96 bg-slate-50 rounded-xl flex items-center justify-center">
-                <p className="text-slate-600 text-sm md:text-base">
-                  Settings interface
-                </p>
-              </div>
-            </div>
-          )}
         </main>
       </div>
     </div>

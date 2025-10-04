@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function Hero_Section() {
@@ -65,7 +66,7 @@ export default function Hero_Section() {
                 className={`flex flex-col sm:flex-row gap-4 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
                   }`}
               >
-                <button className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25">
+                <Link href="/contact" className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 inline-flex items-center justify-center">
                   <span className="flex items-center justify-center">
                     Get Started Today
                     <svg
@@ -82,11 +83,12 @@ export default function Hero_Section() {
                       />
                     </svg>
                   </span>
-                </button>
-
-                <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-slate-600 hover:border-slate-500 text-white font-semibold rounded-xl transition-all duration-300 hover:bg-slate-800/50 backdrop-blur-sm">
-                  Free Consultation
-                </button>
+                </Link>
+                <Link href="/booking">
+                  <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-slate-600 hover:border-slate-500 text-white font-semibold rounded-xl transition-all duration-300 hover:bg-slate-800/50 backdrop-blur-sm">
+                    Free Consultation
+                  </button>
+                </Link>
               </div>
 
               {/* Stats */}

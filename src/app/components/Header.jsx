@@ -91,24 +91,25 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="nav-link">
+            <Link href="/" className="nav-link cursor-pointer">
               Home
             </Link>
-            <Link href="/about" className="nav-link">
+            <Link href="/about" className="nav-link cursor-pointer">
               About
             </Link>
-            <Link href="/services" className="nav-link">
+            <Link href="/services" className="nav-link cursor-pointer">
               Services
             </Link>
-            <Link href="/tax-tools" className="nav-link">
+            <Link href="/tax-tools" className="nav-link cursor-pointer">
               Tax Tools
             </Link>
-            <Link href="/booking" className="nav-link">
+            <Link href="/booking" className="nav-link cursor-pointer">
               Schedule Consultation
             </Link>
-            <Link href="/contact" className="nav-link">
+            <Link href="/contact" className="nav-link cursor-pointer">
               Contact
             </Link>
+
           </nav>
 
           {/* CTA / Profile */}
@@ -133,6 +134,7 @@ export default function Header() {
                 <Link href="/signup" className="btn-primary">
                   Signup
                 </Link>
+
               </div>
             )}
           </div>
@@ -169,28 +171,29 @@ export default function Header() {
             }`}
         >
           <nav className="flex flex-col space-y-4 pt-4 border-t text-white border-slate-800">
-            <Link href="/" className="nav-link">
+            <Link href="/" className="nav-link  cursor-pointer">
               Home
             </Link>
-            <Link href="/about" className="nav-link">
+            <Link href="/about" className="nav-link cursor-pointer">
               About
             </Link>
-            <Link href="/services" className="nav-link">
+            <Link href="/services" className="nav-link cursor-pointer">
               Services
             </Link>
-            <Link href="/tax-tools" className="nav-link">
+            <Link href="/tax-tools" className="nav-link cursor-pointer">
               Tax Tools
             </Link>
-            <Link href="/booking" className="nav-link">
+            <Link href="/booking" className="nav-link cursor-pointer">
               Schedule Consultation
             </Link>
-            <Link href="/contact" className="nav-link">
+            <Link href="/contact" className="nav-link cursor-pointer">
               Contact
             </Link>
+
             {token ? (
-              <div className="mt-4 flex justify-center">
+              <div className="mt-4 flex justify-start">
                 <Popover content={content} trigger="click">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center  justify-center text-white font-bold cursor-pointer">
                     {user?.name
                       ? user.name
                         .split(" ")
@@ -209,6 +212,7 @@ export default function Header() {
                 <Link href="/signup" className="btn-primary w-32 text-center">
                   Signup
                 </Link>
+
               </div>
             )}
           </nav>
@@ -217,7 +221,7 @@ export default function Header() {
 
       {/* Extra Tailwind Styling */}
       <style jsx>{`
-        .nav-link {
+        .nav-link cursor-pointer {
           @apply text-slate-300 hover:text-white transition-colors duration-300;
         }
         .btn-primary {

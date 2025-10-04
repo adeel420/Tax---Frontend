@@ -1,8 +1,5 @@
 "use client";
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
 export default function TaxTools() {
   const irsTools = [
     { title: "Where's My Refund?", url: "https://www.irs.gov/refunds", icon: "💰", desc: "Check your federal tax refund status" },
@@ -23,9 +20,7 @@ export default function TaxTools() {
   ];
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 pt-20">
         <div className="w-[90%] mx-auto py-16">
           <div className="text-center mb-12">
             <h1 className="text-4xl lg:text-6xl font-bold text-white mb-4">
@@ -139,8 +134,6 @@ export default function TaxTools() {
             </div>
           </div>
         </div>
-      </div>
-      <Footer />
-    </>
+    </div>
   );
 }

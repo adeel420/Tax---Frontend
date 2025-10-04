@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function Page() {
@@ -306,9 +307,8 @@ export default function Page() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`relative group ${
-                  service.popular ? "transform scale-105" : ""
-                }`}
+                className={`relative group ${service.popular ? "transform scale-105" : ""
+                  }`}
               >
                 {service.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 sm:px-6 sm:py-2 rounded-full text-xs sm:text-sm font-bold z-10">
@@ -364,11 +364,10 @@ export default function Page() {
                   </ul>
 
                   <button
-                    className={`w-full py-3 sm:py-4 font-semibold rounded-xl sm:rounded-2xl transition-all duration-300 transform group-hover:scale-105 text-sm sm:text-base ${
-                      service.popular
-                        ? "bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white shadow-lg"
-                        : "bg-slate-100 hover:bg-slate-200 text-slate-900"
-                    }`}
+                    className={`w-full py-3 sm:py-4 font-semibold rounded-xl sm:rounded-2xl transition-all duration-300 transform group-hover:scale-105 text-sm sm:text-base ${service.popular
+                      ? "bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white shadow-lg"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-900"
+                      }`}
                   >
                     Get Started
                   </button>
@@ -460,13 +459,15 @@ export default function Page() {
               Schedule your free consultation today and discover how much you
               could save
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 font-semibold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">
+            <div className="  flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Link href="/booking">   <button className=" cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 font-semibold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">
                 Free Consultation
               </button>
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-semibold rounded-lg sm:rounded-xl hover:bg-white/10 transition-all duration-300 text-sm sm:text-base">
+              </Link>
+              <Link href="tell:123466789">  <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-semibold rounded-lg sm:rounded-xl hover:bg-white/10 transition-all duration-300 text-sm sm:text-base">
                 Call (555) 123-4567
               </button>
+              </Link>
             </div>
           </div>
         </div>

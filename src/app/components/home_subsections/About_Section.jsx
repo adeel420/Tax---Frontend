@@ -2,6 +2,7 @@
 
 import { assets } from "@/app/assets/assets";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function About_Section() {
@@ -129,7 +130,7 @@ export default function About_Section() {
 
               <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed">
                 With over 5 years of experience in tax preparation and financial
-                planning, John founded Eliaselitaxservices to provide
+                planning, Hermano founded Eliaselitaxservices to provide
                 personalized, expert tax services that maximize refunds and
                 minimize stress for individuals and businesses.
               </p>
@@ -181,12 +182,16 @@ export default function About_Section() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-                Schedule Consultation
-              </button>
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-slate-400 hover:border-slate-500 text-slate-700 font-semibold rounded-xl transition-all duration-300 hover:bg-white/50 backdrop-blur-sm">
-                View Credentials
-              </button>
+              <Link href="/booking">
+                <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  Schedule Consultation
+                </button>
+              </Link>
+              <Link href="#">
+                <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-slate-400 hover:border-slate-500 text-slate-700 font-semibold rounded-xl transition-all duration-300 hover:bg-white/50 backdrop-blur-sm">
+                  View Credentials
+                </button>
+              </Link>
             </div>
           </div>
         </div>
