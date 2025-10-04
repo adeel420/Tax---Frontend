@@ -8,7 +8,7 @@ export default function DocumentViewSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all"); // all, complete, incomplete
+  const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
@@ -20,11 +20,11 @@ export default function DocumentViewSection() {
     { key: "form1040", label: "1040", icon: "📊" },
   ];
 
-  // Fetch all users' documents
   const fetchAllDocuments = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token =
+        sessionStorage.getItem("token") || localStorage.getItem("token");
       if (!token) {
         setError("No authentication token found");
         return;
@@ -56,7 +56,6 @@ export default function DocumentViewSection() {
     fetchAllDocuments();
   }, []);
 
-  // Calculate completion percentage for a user
   const getCompletionPercentage = (userDoc) => {
     const uploadedCount = documentTypes.filter(
       (docType) => userDoc[docType.key]
@@ -64,7 +63,6 @@ export default function DocumentViewSection() {
     return Math.round((uploadedCount / documentTypes.length) * 100);
   };
 
-  // Get total documents for a user
   const getTotalDocuments = (userDoc) => {
     const requiredDocsCount = documentTypes.filter(
       (docType) => userDoc[docType.key]
@@ -73,7 +71,6 @@ export default function DocumentViewSection() {
     return requiredDocsCount + miscDocsCount;
   };
 
-  // Filter users based on search and status
   const filteredUsers = allUserDocuments.filter((userDoc) => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch =
@@ -91,29 +88,45 @@ export default function DocumentViewSection() {
     return matchesSearch;
   });
 
-  // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
+  // Helper function to check if file is PDF
+  const isPdfFile = (fileName) => {
+    return fileName?.toLowerCase().endsWith(".pdf");
+  };
+
   const handleView = (fileUrl, fileName) => {
+    if (!fileUrl) {
+      alert("File URL is not available");
+      return;
+    }
+
+    console.log("=== VIEW DEBUG ===");
+    console.log("URL:", fileUrl);
+    console.log("Filename:", fileName);
+
     window.open(fileUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleDownload = (fileUrl, fileName) => {
-    // If Cloudinary URL, force download using fl_attachment
-    let downloadUrl = fileUrl;
-    if (downloadUrl.includes("res.cloudinary.com")) {
-      downloadUrl = downloadUrl.replace("/upload/", "/upload/fl_attachment/");
+    if (!fileUrl) {
+      alert("File URL is not available");
+      return;
     }
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.setAttribute("download", fileName || "document");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    console.log("=== DOWNLOAD DEBUG ===");
+    console.log("URL:", fileUrl);
+    console.log("Filename:", fileName);
+
+    if (fileUrl.includes("res.cloudinary.com")) {
+      const downloadUrl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
+      window.open(downloadUrl, "_blank");
+    } else {
+      window.open(fileUrl, "_blank");
+    }
   };
 
   const formatDate = (dateString) => {
@@ -317,13 +330,12 @@ export default function DocumentViewSection() {
               <div className="mb-4">
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      getCompletionPercentage(userDoc) === 100
+                    className={`h-2 rounded-full transition-all duration-300 ${getCompletionPercentage(userDoc) === 100
                         ? "bg-green-500"
                         : getCompletionPercentage(userDoc) > 0
-                        ? "bg-amber-500"
-                        : "bg-red-500"
-                    }`}
+                          ? "bg-amber-500"
+                          : "bg-red-500"
+                      }`}
                     style={{ width: `${getCompletionPercentage(userDoc)}%` }}
                   ></div>
                 </div>
@@ -334,11 +346,10 @@ export default function DocumentViewSection() {
                 {documentTypes.map((docType) => (
                   <div key={docType.key} className="text-center">
                     <div
-                      className={`p-3 rounded-lg border-2 ${
-                        userDoc[docType.key]
+                      className={`p-3 rounded-lg border-2 ${userDoc[docType.key]
                           ? "bg-green-50 border-green-200"
                           : "bg-slate-50 border-slate-200"
-                      }`}
+                        }`}
                     >
                       <div className="text-lg sm:text-2xl mb-1">
                         {docType.icon}
@@ -355,17 +366,22 @@ export default function DocumentViewSection() {
                             {userDoc[docType.key].fileName}
                           </div>
                           <div className="flex gap-1">
-                            <button
-                              onClick={() =>
-                                handleView(
-                                  userDoc[docType.key].fileUrl,
-                                  userDoc[docType.key].fileName
-                                )
-                              }
-                              className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 cursor-pointer"
-                            >
-                              View
-                            </button>
+                            {/* View button - only show for non-PDF files */}
+                            {!isPdfFile(userDoc[docType.key].fileName) && (
+                              <button
+                                onClick={() =>
+                                  handleView(
+                                    userDoc[docType.key].fileUrl,
+                                    userDoc[docType.key].fileName
+                                  )
+                                }
+                                className="flex-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 cursor-pointer"
+                              >
+                                View
+                              </button>
+                            )}
+
+                            {/* Download button - always show */}
                             <button
                               onClick={() =>
                                 handleDownload(
@@ -375,7 +391,9 @@ export default function DocumentViewSection() {
                               }
                               className="flex-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 cursor-pointer"
                             >
-                              ↓
+                              {isPdfFile(userDoc[docType.key].fileName)
+                                ? "Download"
+                                : "↓"}
                             </button>
                           </div>
                         </div>
@@ -413,21 +431,26 @@ export default function DocumentViewSection() {
                           </p>
                         </div>
                         <div className="flex gap-1 ml-2">
-                          <button
-                            onClick={() =>
-                              handleView(doc.fileUrl, doc.fileName)
-                            }
-                            className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-                          >
-                            View
-                          </button>
+                          {/* View button - only for non-PDF */}
+                          {!isPdfFile(doc.fileName) && (
+                            <button
+                              onClick={() =>
+                                handleView(doc.fileUrl, doc.fileName)
+                              }
+                              className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                            >
+                              View
+                            </button>
+                          )}
+
+                          {/* Download button - always show */}
                           <button
                             onClick={() =>
                               handleDownload(doc.fileUrl, doc.fileName)
                             }
                             className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200"
                           >
-                            ↓
+                            {isPdfFile(doc.fileName) ? "Download" : "↓"}
                           </button>
                         </div>
                       </div>
@@ -456,11 +479,10 @@ export default function DocumentViewSection() {
               <button
                 key={index + 1}
                 onClick={() => setCurrentPage(index + 1)}
-                className={`px-3 py-1 text-sm rounded ${
-                  currentPage === index + 1
+                className={`px-3 py-1 text-sm rounded ${currentPage === index + 1
                     ? "bg-blue-600 text-white"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
+                  }`}
               >
                 {index + 1}
               </button>

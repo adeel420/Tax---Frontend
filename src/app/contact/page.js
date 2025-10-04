@@ -74,7 +74,7 @@ export default function Page() {
         </svg>
       ),
       title: "Phone",
-      details: "(555) 123-4567",
+      details: "(630) 394-4147",
       subtitle: "Mon-Fri 9AM-6PM",
     },
     {
@@ -120,8 +120,8 @@ export default function Page() {
         </svg>
       ),
       title: "Office",
-      details: "123 Main Street",
-      subtitle: "Suite 200, City, ST 12345",
+      details: "Lakeville, Indiana",
+      subtitle: "Professional Tax Services",
     },
   ];
 
@@ -240,7 +240,7 @@ export default function Page() {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border text-black border-slate-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
-                      placeholder="(555) 123-4567"
+                      placeholder="(630) 394-4147"
                     />
                   </div>
                   <div>
@@ -336,7 +336,7 @@ export default function Page() {
                     Interactive Map
                   </p>
                   <p className="text-xs sm:text-sm">
-                    123 Main Street, Suite 200
+                    Lakeville, Indiana
                   </p>
                 </div>
               </div>
@@ -350,7 +350,7 @@ export default function Page() {
                   For urgent tax matters during business hours
                 </p>
                 <button className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-all duration-300 text-sm sm:text-base">
-                  Call Now: (555) 123-4567
+                  Call Now: (630) 394-4147
                 </button>
               </div>
             </div>
