@@ -56,9 +56,8 @@ export default function Page() {
   ];
 
   const handleLogout = () => {
-    logout();
-    toast.success("Logged out successfully");
-    router.push("/");
+    toast.success("Dashboard Logout");
+  };router.push("/");
   };
 
   const checkAuthAndRole = async () => {
