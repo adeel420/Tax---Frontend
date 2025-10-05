@@ -54,9 +54,17 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>
-            <div className="space-y-2 text-slate-400 text-sm sm:text-base">
-              <p>(630) 394-4147</p>
-              <p>info@Eliaselitaxservices.com</p>
+            <div className="space-y-2 flex flex-col text-slate-400 text-sm sm:text-base">
+              <a href="tel:6303944147" className=" cursor-pointer">
+                (630) 394-4147
+              </a>
+
+              <a
+                href={`mailto:info@Eliaselitaxservices.com`}
+                className="cursor-pointer"
+              >
+                info@Eliaselitaxservices.com
+              </a>
               <p>Lakeville, Indiana</p>
               <div className="flex space-x-4 pt-4">
                 {["twitter", "facebook"].map((icon, i) => (
