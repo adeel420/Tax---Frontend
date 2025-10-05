@@ -9,7 +9,7 @@ export default function FAQSection() {
     {
       question: "How much do your tax services cost?",
       answer:
-        "Our pricing starts at $99 for individual tax preparation. Business tax services start at $299. We provide transparent pricing with no hidden fees.",
+        "Our pricing starts at $150 for individual tax preparation. Business tax services start at $399. We provide transparent pricing with no hidden fees.",
       icon: (
         <svg
           className="w-5 h-5 sm:w-6 sm:h-6"
