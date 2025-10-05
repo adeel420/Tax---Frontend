@@ -17,6 +17,7 @@ export default function BookingPage() {
     message: ""
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [slotsLoading, setSlotsLoading] = useState(false);
   const router = useRouter();
 
   const services = [
@@ -31,6 +32,7 @@ export default function BookingPage() {
   ];
 
   const fetchAvailableSlots = async (date) => {
+    setSlotsLoading(true);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/appointment/slots/${date}`);
       const data = await response.json();
@@ -39,6 +41,8 @@ export default function BookingPage() {
       }
     } catch (error) {
       console.error("Error fetching slots:", error);
+    } finally {
+      setSlotsLoading(false);
     }
   };
 
@@ -255,28 +259,37 @@ export default function BookingPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-                  {availableSlots.map(slot => (
-                    <button
-                      key={slot}
-                      type="button"
-                      onClick={() => setSelectedTime(slot)}
-                      className={`p-4 rounded-lg text-sm font-medium transition-all ${selectedTime === slot
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'bg-slate-100 text-slate-900 hover:bg-slate-200'
-                        }`}
-                    >
-                      {formatTime(slot)}
-                    </button>
-                  ))}
-                </div>
-
-                {availableSlots.length === 0 && (
+                {slotsLoading ? (
                   <div className="text-center py-8">
-                    <div className="text-slate-400 mb-2">😔</div>
-                    <p className="text-slate-600">No available slots for this date</p>
-                    <p className="text-slate-500 text-sm mt-1">Please select another date</p>
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+                    <p className="text-slate-600">Loading available time slots...</p>
                   </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                      {availableSlots.map(slot => (
+                        <button
+                          key={slot}
+                          type="button"
+                          onClick={() => setSelectedTime(slot)}
+                          className={`p-4 rounded-lg text-sm font-medium transition-all ${selectedTime === slot
+                            ? 'bg-blue-600 text-white shadow-lg'
+                            : 'bg-slate-100 text-slate-900 hover:bg-slate-200'
+                            }`}
+                        >
+                          {formatTime(slot)}
+                        </button>
+                      ))}
+                    </div>
+
+                    {availableSlots.length === 0 && (
+                      <div className="text-center py-8">
+                        <div className="text-slate-400 mb-2">😔</div>
+                        <p className="text-slate-600">No available slots for this date</p>
+                        <p className="text-slate-500 text-sm mt-1">Please select another date</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
