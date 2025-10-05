@@ -173,9 +173,31 @@ export default function Page() {
                 </h3>
 
                 {/* Details */}
-                <div className="text-base sm:text-lg xl:text-xl text-blue-600 font-semibold mb-1">
-                  {info.details}
-                </div>
+                {info.title === "Phone" ? (
+                  <a
+                    href={`tel:${info.details.replace(/\D/g, "")}`} // removes spaces, brackets, etc.
+                    className="text-base sm:text-lg xl:text-xl text-blue-600 font-semibold mb-1 block hover:underline cursor-pointer"
+                  >
+                    {info.details}
+                  </a>
+                ) : info.title === "Email" ? (
+                  <a
+                    href={`mailto:${info.details}`}
+                    className="text-base sm:text-lg xl:text-xl text-blue-600 font-semibold mb-1 block hover:underline cursor-pointer"
+                  >
+                    {info.details}
+                  </a>
+                ) : (
+                  <div className="text-base sm:text-lg xl:text-xl text-blue-600 font-semibold mb-1">
+                    {info.details}
+                  </div>
+                )}
+
+                {info.title === "Office" && (
+                  <div className="text-slate-600 text-sm sm:text-base xl:text-lg">
+                    Serving all the Midwest
+                  </div>
+                )}
 
                 {/* Subtitle */}
                 <div className="text-slate-600 text-sm sm:text-base xl:text-lg">
@@ -335,9 +357,7 @@ export default function Page() {
                   <p className="text-base sm:text-lg font-semibold">
                     Interactive Map
                   </p>
-                  <p className="text-xs sm:text-sm">
-                    Lakeville, Indiana
-                  </p>
+                  <p className="text-xs sm:text-sm">Lakeville, Indiana</p>
                 </div>
               </div>
 
@@ -349,9 +369,12 @@ export default function Page() {
                 <p className="mb-4 sm:mb-6 opacity-90 text-sm sm:text-base">
                   For urgent tax matters during business hours
                 </p>
-                <button className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-all duration-300 text-sm sm:text-base">
+                <a
+                  href="tel:6303944147"
+                  className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-all duration-300 text-sm sm:text-base"
+                >
                   Call Now: (630) 394-4147
-                </button>
+                </a>
               </div>
             </div>
           </div>

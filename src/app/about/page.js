@@ -27,23 +27,23 @@ export default function Page() {
       credentials: "CPA, EA",
       description:
         "5+ years of tax expertise with specialization in business and individual tax planning.",
-      avatar: "JS",
+      avatar: "HM",
     },
     {
-      name: "Sarah Johnson",
+      name: "Ance Michael",
       role: "Senior Tax Advisor",
       credentials: "CPA",
       description:
         "Expert in complex tax situations and IRS representation with 15 years experience.",
-      avatar: "SJ",
+      avatar: "AM",
     },
     {
-      name: "Mike Chen",
+      name: "Joseph Ebinda",
       role: "Business Tax Specialist",
       credentials: "EA, MBA",
       description:
         "Specializes in corporate tax planning and small business financial strategies.",
-      avatar: "MC",
+      avatar: "JE",
     },
   ];
 
@@ -275,10 +275,14 @@ export default function Page() {
               <Link href="/booking">
                 <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 font-semibold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">
                   Schedule Consultation
-                </button>  </Link>
-              <Link href="/contact"> <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-semibold rounded-lg sm:rounded-xl hover:bg-white/10 transition-all duration-300 text-sm sm:text-base">
-                Contact Us Today
-              </button></Link>
+                </button>{" "}
+              </Link>
+              <Link href="/contact">
+                {" "}
+                <button className="cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-semibold rounded-lg sm:rounded-xl hover:bg-white/10 transition-all duration-300 text-sm sm:text-base">
+                  Contact Us Today
+                </button>
+              </Link>
             </div>
           </div>
         </div>
