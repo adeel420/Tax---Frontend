@@ -172,6 +172,10 @@ export default function Page() {
         {activeTab === "document" && <DocumentsSection />}
       </main>
     </div>
+  </div>
+);
+}
+    </div>
     </div>
   );
 }
