@@ -34,7 +34,7 @@ export default function Page() {
       role: "Senior Tax Advisor",
       credentials: "CPA",
       description:
-        "Expert in complex tax situations and IRS representation with 15 years experience.",
+        "Expert in complex tax situations and IRS representation with 5 years experience.",
       avatar: "AM",
     },
     {
