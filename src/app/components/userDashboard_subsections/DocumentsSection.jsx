@@ -263,7 +263,8 @@ export default function DocumentsSection() {
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER}/document/${user.id}/${type}${index !== null ? `/${index}` : ""
+        `${process.env.NEXT_PUBLIC_SERVER}/document/${user.id}/${type}${
+          index !== null ? `/${index}` : ""
         }`,
         {
           headers: {
@@ -604,10 +605,11 @@ export default function DocumentsSection() {
                   </div>
                 ) : (
                   <div
-                    className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${dragActive === docType.key
+                    className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
+                      dragActive === docType.key
                         ? "border-blue-400 bg-blue-50"
                         : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"
-                      } ${uploadingAll ? "opacity-50 pointer-events-none" : ""}`}
+                    } ${uploadingAll ? "opacity-50 pointer-events-none" : ""}`}
                     onDrop={(e) => handleDrop(e, docType.key)}
                     onDragOver={(e) => handleDragOver(e, docType.key)}
                     onDragLeave={handleDragLeave}
@@ -738,10 +740,11 @@ export default function DocumentsSection() {
 
                 {/* Dropzone */}
                 <div
-                  className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${dragActive === "misc"
+                  className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
+                    dragActive === "misc"
                       ? "border-blue-400 bg-blue-50"
                       : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"
-                    } ${uploadingAll ? "opacity-50 pointer-events-none" : ""}`}
+                  } ${uploadingAll ? "opacity-50 pointer-events-none" : ""}`}
                   onDrop={(e) => handleDrop(e, "misc")}
                   onDragOver={(e) => handleDragOver(e, "misc")}
                   onDragLeave={handleDragLeave}
