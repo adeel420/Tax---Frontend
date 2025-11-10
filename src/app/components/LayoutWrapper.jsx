@@ -12,7 +12,7 @@ export default function LayoutWrapper({ children }) {
     <>
      <Header />
       {children}
-    && <Footer />
+     <Footer />
       <BackToTop />
     </>
   );
