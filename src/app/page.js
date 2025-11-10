@@ -13,20 +13,26 @@ import IRS_News_Section from "./components/home_subsections/IRS_News_Section";
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
   return (
     <div className="w-full">
-      // <Hero_Section />
-      // <AboutSection />
-      // <WhyChooseUs />
-      // <ServicesSection />
-      // <Testimonial_Section />
-      // <FAQSection />
-      // <IRS_News_Section />
-      // <Newsletter />
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8 sm:p-6">
+
+      {/*
+        <Hero_Section />
+        <AboutSection />
+        <WhyChooseUs />
+        <ServicesSection />
+        <Testimonial_Section />
+        <FAQSection />
+        <IRS_News_Section />
+        <Newsletter />
+      */}
+
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8 sm:p-6">
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl border border-gray-200 p-6 sm:p-8 md:p-10">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-6 text-center">
             Payment Required to Activate Websites
@@ -56,12 +62,10 @@ export default function Home() {
 
           <p className="mt-4 text-gray-700 leading-relaxed text-justify text-sm sm:text-base">
             The first website still has an unpaid balance of{" "}
-            <span className="font-semibold text-emerald-600">$160</span>, and
-            the second one has{" "}
+            <span className="font-semibold text-emerald-600">$160</span>, and the second one has{" "}
             <span className="font-semibold text-emerald-600">$61</span>{" "}
             remaining. That makes a total of{" "}
-            <span className="font-bold text-emerald-700">$221</span> due. Both
-            websites will go live once the full payment is received.
+            <span className="font-bold text-emerald-700">$221</span> due. Both websites will go live once the full payment is received.
           </p>
 
           <div className="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-5 sm:p-6">
@@ -83,7 +87,7 @@ export default function Home() {
               will be activated.
             </p>
 
-            {/* ⚠️ Critical Warning Section */}
+            {/* Critical Warning Section */}
             <div className="mt-6 bg-red-50 border border-red-200 rounded-lg p-4 sm:p-5">
               <h3 className="text-red-700 font-semibold mb-2 flex items-center text-base sm:text-lg">
                 ⚠️ CRITICAL: Network Warning
