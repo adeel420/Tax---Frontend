@@ -6,23 +6,13 @@ import Footer from "./Footer";
 import BackToTop from "./BackToTop";
 
 export default function LayoutWrapper({ children }) {
-  const pathname = usePathname();
-  const hideHeaderPaths = [
-    "/admin-dashboard",
-    "/login",
-    "/signup",
-    "/forget-password",
-    "/verify-email",
-    "/reset-password",
-    "/user-dashboard",
-  ];
-  const hideHeaderFooter = hideHeaderPaths.includes(pathname);
+  );
 
   return (
     <>
-      {/* {!hideHeaderFooter && <Header />} */}
+     <Header />
       {children}
-      {/* {!hideHeaderFooter && <Footer />} */}
+    && <Footer />
       <BackToTop />
     </>
   );
