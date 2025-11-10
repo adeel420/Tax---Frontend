@@ -20,9 +20,11 @@ export default function LayoutWrapper({ children }) {
 
   return (
     <>
-       
+
+      {/* {!hideHeaderFooter && <Header />} */}
       {children}
-      
+      {/* {!hideHeaderFooter && <Footer />} */}
+
       <BackToTop />
     </>
   );
